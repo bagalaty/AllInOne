@@ -1,5 +1,8 @@
 ﻿using Core.Proxy.Http;
 using Services.Models.Enums;
+using System;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Services.Models
 {
@@ -7,6 +10,14 @@ namespace Services.Models
     {
         public BaseModel()
         { }
+
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [Key]
+        public int Id { get; set; }
+        public DateTime Created { get; set; }
+        public DateTime Modified { get; set; }
+
+
 
         public BaseModel(AllInOneResponse response)
         {

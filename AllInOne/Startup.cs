@@ -1,56 +1,50 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.OpenApi.Models;
-using Services.Data;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Swashbuckle.AspNetCore.Swagger;
-using System;
-using System.IO;
-using System.Reflection;
 
 namespace AllInOne
 {
-    /// <summary>
-    /// 
-    /// </summary>
     public class Startup
     {
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="configuration"></param>
-        public Startup(IConfiguration configuration)
+
+        public IConfiguration Configuration { get; }
+        private readonly ILogger<Startup> _logger;
+
+        public Startup(IConfiguration configuration, ILogger<Startup> logger)
         {
             Configuration = configuration;
+            _logger = logger;
         }
-        /// <summary>
-        /// 
-        /// </summary>
-        public IConfiguration Configuration { get; }
 
-        /// <summary>
-        /// This method gets called by the runtime. Use this method to add services to the container.
-        /// </summary>
+
+        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
-            services.AddDbContext<EntityContext>(options =>
-    options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+            _logger.LogInformation("ConfigureServices called");
 
-            // In production, the Angular files will be served from this directory
-            services.AddSpaStaticFiles(configuration =>
+            services.AddDbContext<EntityContext>(options =>
             {
-                configuration.RootPath = "ClientApp/dist";
+                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"),
+                    assembly => assembly.MigrationsAssembly(typeof(EntityContext).Assembly.FullName));
             });
+
+
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new Info
-                {
+                c.SwaggerDoc("v1", new Info {
                     Title = "My API",
                     Version = "v1",
                     Description = "All In One API detail description",
@@ -59,7 +53,7 @@ namespace AllInOne
                     {
                         Name = "Ahmed BaGaLaTy",
                         Email = string.Empty,
-                        Url = "https://twitter.com/spboyer"
+                        Url = "https://twitter.com/BaGaLaTy"
                     },
                     License = new License
                     {
@@ -67,68 +61,44 @@ namespace AllInOne
                         Url = "https://example.com/license"
                     }
                 });
-                // Set the comments path for the Swagger JSON and UI.
-                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-                c.IncludeXmlComments(xmlPath);
-            });
+                c.AddSecurityDefinition("Bearer",
+                     new ApiKeyScheme
+                     {
+                         In = "header",
+                         Name = "Authorization",
+                         Type = "apiKey"
+                     });
+                c.AddSecurityRequirement(new Dictionary<string, IEnumerable<string>> {
+                    { "Bearer bogy",Enumerable.Empty<string>() },
+                                        //{ "Bearer",Enumerable.Empty<string>() },
 
-
-            // In production, the Angular files will be served from this directory
-            services.AddSpaStaticFiles(configuration =>
-            {
-                configuration.RootPath = "ClientApp/dist";
+                    });
             });
         }
 
-        /// <summary>
-        /// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        /// </summary>
+        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
+            _logger.LogInformation("Configure called");
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
             else
             {
-                app.UseExceptionHandler("/Error");
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
 
-
-
             app.UseHttpsRedirection();
-            app.UseStaticFiles();
-            app.UseSpaStaticFiles();
-
-            app.UseMvc(routes =>
-            {
-                routes.MapRoute(
-                    name: "default",
-                    template: "{controller}/{action=Index}/{id?}");
-            });
-
-            app.UseSpa(spa =>
-            {
-                // To learn more about options for serving an Angular SPA from ASP.NET Core,
-                // see https://go.microsoft.com/fwlink/?linkid=864501
-
-                spa.Options.SourcePath = "ClientApp";
-
-                if (env.IsDevelopment())
-                {
-                    spa.UseAngularCliServer(npmScript: "start");
-                }
-            });
+            app.UseMvc();
 
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "post API V1");
-                c.RoutePrefix = string.Empty;
-
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Values Api V1");
+               
             });
         }
     }
