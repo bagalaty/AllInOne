@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Services.Models;
 
 namespace AllInOne.Controllers
 {
@@ -10,11 +11,17 @@ namespace AllInOne.Controllers
     [ApiController]
     public class ValuesController : ControllerBase
     {
+        public EntityContext extityContext { get; set; }
+        public ValuesController(EntityContext context)
+        {
+            extityContext = context;
+        }
         // GET api/values
         [HttpGet]
-        public ActionResult<IEnumerable<string>> Get()
+        public ActionResult<IEnumerable<Bookmark>> Get()
         {
-            return new string[] { "value1", "value2" };
+            var bookmarkList=extityContext.Bookmarks.ToList();
+            return bookmarkList;
         }
 
         // GET api/values/5

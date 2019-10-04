@@ -18,9 +18,12 @@ using System.Linq;
         }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            //var connection = new AppConfiguration().ConnectionString;
-            //optionsBuilder.UseSqlServer(connection);
-            base.OnConfiguring(optionsBuilder);
+       
+        //var connection = new AppConfiguration().ConnectionString;
+        //optionsBuilder.UseSqlServer(connection);
+        optionsBuilder.EnableSensitiveDataLogging();
+
+        base.OnConfiguring(optionsBuilder);
         }
 
 
@@ -32,15 +35,25 @@ using System.Linq;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<Bookmark>().HasData(new Bookmark()
-            {
-                CreatedOn = DateTime.UtcNow,
-                Description = "OG description of the URL",
-                Title = "OG Title of the URL",
-                ImageURL = "https://example.com/sample.png"
-            });
+        var allEntities = modelBuilder.Model.GetEntityTypes();
 
-            modelBuilder.Entity<Employee>().ToTable("Employee");
+        //foreach (var entity in allEntities)
+        //{
+        //  //  entity.AddProperty("Created", typeof(DateTime));
+        //    entity.AddProperty("Modified", typeof(DateTime));
+        //    entity.AddProperty("Message", typeof(string));
+        //}
+
+
+        //modelBuilder.Entity<Bookmark>().HasData(new Bookmark()
+        //{
+        //    CreatedOn = DateTime.UtcNow,
+        //    Description = "OG description of the URL",
+        //    Title = "OG Title of the URL",
+        //    ImageURL = "https://example.com/sample.png"
+        //});
+
+        modelBuilder.Entity<Employee>().ToTable("Employee");
             modelBuilder.Entity<Post>().ToTable("Post");
             //  modelBuilder.Entity<Student>().ToTable("Student");
         }
@@ -66,9 +79,9 @@ using System.Linq;
             {
                 if (entry.State == EntityState.Added)
                 {
-                    ((BaseModel)entry.Entity).Created = DateTime.UtcNow;
+              //      ((BaseModel)entry.Entity).Created = DateTime.UtcNow;
                 }
-            ((BaseModel)entry.Entity).Modified = DateTime.UtcNow;
+           // ((BaseModel)entry.Entity).Modified = DateTime.UtcNow;
             }
         }
 

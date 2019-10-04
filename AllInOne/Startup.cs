@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -31,6 +33,7 @@ namespace AllInOne
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+
             _logger.LogInformation("ConfigureServices called");
 
             services.AddDbContext<EntityContext>(options =>
@@ -40,11 +43,14 @@ namespace AllInOne
             });
 
 
+            services.AddLocalization(options => options.ResourcesPath = "Resources");
+
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new Info {
+                c.SwaggerDoc("v1", new Info
+                {
                     Title = "My API",
                     Version = "v1",
                     Description = "All In One API detail description",
@@ -92,13 +98,31 @@ namespace AllInOne
             }
 
             app.UseHttpsRedirection();
+
+            var supportedCultures = new List<CultureInfo>
+            {
+                new CultureInfo("ar-AR"),
+                new CultureInfo("en-US")
+            };
+
+            var options = new RequestLocalizationOptions
+            {
+                DefaultRequestCulture = new RequestCulture("en-US"),
+                SupportedCultures = supportedCultures,
+                SupportedUICultures = supportedCultures,
+            };
+
+            app.UseRequestLocalization(options);
+
+
             app.UseMvc();
+
 
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "Values Api V1");
-               
+
             });
         }
     }
