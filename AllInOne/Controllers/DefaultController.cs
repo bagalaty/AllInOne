@@ -28,6 +28,8 @@ namespace AllInOne.Controllers
         {
             extityContext = context;
         }
+
+        [ApiVersion("1.0")]
         [HttpGet]
         public ActionResult<IEnumerable<Bookmark>> Get()
         {

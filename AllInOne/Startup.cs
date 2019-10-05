@@ -66,16 +66,25 @@ namespace AllInOne
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
 
-            services.AddApiVersioning();
-            services.AddApiVersioning(o => {
-                //o.ApiVersionReader = new HeaderApiVersionReader("api-version");
-                //o.ReportApiVersions = true;
-                //o.DefaultApiVersion = new ApiVersion(1, 0);
-                //o.Conventions.Controller<HelloWorldController>().HasApiVersion(new ApiVersion(2, 0));
-                //o.Conventions.Controller<HelloWorld2Controller>().HasApiVersion(new ApiVersion(3, 0));
-                // o.Conventions.Controller<HomeV2Controller>().HasApiVersion(new ApiVersion(3, 0));
+            /*
+               services.AddApiVersioning();
+              services.AddApiVersioning(o => {
+                  //o.ApiVersionReader = new HeaderApiVersionReader("api-version");
+                  //o.ReportApiVersions = true;
+                  //o.DefaultApiVersion = new ApiVersion(1, 0);
+                  //o.Conventions.Controller<HelloWorldController>().HasApiVersion(new ApiVersion(2, 0));
+                  //o.Conventions.Controller<HelloWorld2Controller>().HasApiVersion(new ApiVersion(3, 0));
+                  // o.Conventions.Controller<HomeV2Controller>().HasApiVersion(new ApiVersion(3, 0));
 
-            });
+              });
+               */
+
+
+            services.AddApiVersioning(o => { o.ApiVersionReader = new HeaderApiVersionReader("api-version");
+                o.AssumeDefaultVersionWhenUnspecified = true;
+            }
+            );
+
 
 
             services.AddSwaggerGen(c =>
