@@ -11,6 +11,7 @@ namespace AllInOne.Controllers
     /// Values Controller
     /// </summary>
     [ApiVersion("2.0")]
+    [ApiVersion("1.0")]
     [Route("api/[controller]")]
     [ApiController]
     public class ValuesController : ControllerBase
@@ -55,8 +56,11 @@ namespace AllInOne.Controllers
         /// </summary>
         /// <param name="value"></param>
         [HttpPost]
-        public void Post([FromBody] string value)
+        public void Post([FromBody] Bookmark value)
         {
+            var item = value;
+            extityContext.Bookmarks.Add(item);
+            extityContext.SaveChanges();
         }
 
         /// <summary>

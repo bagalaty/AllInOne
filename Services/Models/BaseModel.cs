@@ -1,5 +1,6 @@
 ﻿using Core.Proxy.Http;
 using Services.Models.Enums;
+using Services.Models.Interfaces;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -7,7 +8,7 @@ using System.Runtime.Serialization;
 
 namespace Services.Models
 {
-    public class BaseModel
+    public class BaseModel: ITrackable
     {
         public BaseModel()
         { }
@@ -15,6 +16,10 @@ namespace Services.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Key]
         public int Id { get; set; }
+        public DateTime CreatedAt { get ; set ; }
+        public string CreatedBy { get ; set ; }
+        public DateTime LastUpdatedAt { get ; set ; }
+        public string LastUpdatedBy { get ; set ; }
 
         //[IgnoreDataMember]
         //public DateTime Created { get; set; }
@@ -42,7 +47,7 @@ namespace Services.Models
         //        Message = "Internal Server Error";
         //}
 
-       
+
 
 
         //public void FillServerError(BaseModel response, bool splitErrorMessage = false)

@@ -49,7 +49,7 @@
             <param name="id"></param>
             <returns></returns>
         </member>
-        <member name="M:AllInOne.Controllers.ValuesController.Post(System.String)">
+        <member name="M:AllInOne.Controllers.ValuesController.Post(Services.Models.Bookmark)">
             <summary>
             POST api/values
             </summary>

@@ -7,20 +7,22 @@ using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using System.Linq;
+using System.Threading;
+using Services.Models.Interfaces;
 
- 
-   
-    public class EntityContext : DbContext
+public class EntityContext : DbContext
     {
         public EntityContext(DbContextOptions<EntityContext> options)
            : base(options)
         {
+       
         }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
        
         //var connection = new AppConfiguration().ConnectionString;
         //optionsBuilder.UseSqlServer(connection);
+        
         optionsBuilder.EnableSensitiveDataLogging();
 
         base.OnConfiguring(optionsBuilder);
@@ -35,14 +37,20 @@ using System.Linq;
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+        
         var allEntities = modelBuilder.Model.GetEntityTypes();
 
-        //foreach (var entity in allEntities)
-        //{
-        //  //  entity.AddProperty("Created", typeof(DateTime));
-        //    entity.AddProperty("Modified", typeof(DateTime));
-        //    entity.AddProperty("Message", typeof(string));
-        //}
+        foreach (var entity in allEntities)
+        {
+            entity.AddProperty("Created", typeof(DateTime));
+            entity.AddProperty("Modified", typeof(DateTime));
+            entity.AddProperty("Message", typeof(string));
+
+
+            entity.AddProperty("CreatedDate", typeof(DateTime));
+            entity.AddProperty("UpdatedDate", typeof(DateTime));
+        }
+
 
 
         //modelBuilder.Entity<Bookmark>().HasData(new Bookmark()
@@ -55,10 +63,86 @@ using System.Linq;
 
         modelBuilder.Entity<Employee>().ToTable("Employee");
             modelBuilder.Entity<Post>().ToTable("Post");
+            modelBuilder.Entity<Bookmark>().ToTable("Bookmarks");
+
             //  modelBuilder.Entity<Student>().ToTable("Student");
         }
 
-        public override int SaveChanges()
+
+    public override int SaveChanges(bool acceptAllChangesOnSuccess)
+    {
+        OnBeforeSaving();
+        return base.SaveChanges(acceptAllChangesOnSuccess);
+    }
+
+    public override Task<int> SaveChangesAsync(bool acceptAllChangesOnSuccess, CancellationToken cancellationToken = default(CancellationToken))
+    {
+        OnBeforeSaving();
+        return base.SaveChangesAsync(acceptAllChangesOnSuccess, cancellationToken);
+    }
+
+    private void OnBeforeSaving()
+    {
+        var entries = ChangeTracker.Entries();
+        foreach (var entry in entries)
+        {
+            if (entry.Entity is ITrackable trackable)
+            {
+                var now = DateTime.UtcNow;
+                var user = GetCurrentUser() ;
+                switch (entry.State)
+                {
+                    case EntityState.Modified:
+                        trackable.LastUpdatedAt = now;
+                        trackable.LastUpdatedBy = user;
+                        break;
+
+                    case EntityState.Added:
+                        trackable.CreatedAt = now;
+                        trackable.CreatedBy = user;
+                        trackable.LastUpdatedAt = now;
+                        trackable.LastUpdatedBy = user;
+                        break;
+                }
+
+                entry.Property("UpdatedDate").CurrentValue = DateTime.Now;
+
+                if (entry.State == EntityState.Added)
+                {
+                    entry.Property("CreatedDate").CurrentValue = DateTime.Now;
+                }
+            }
+        }
+
+        
+    }
+
+    private string GetCurrentUser()
+        {
+            return "BaGaLaTy"; // TODO implement your own logic
+
+            // If you are using ASP.NET Core, you should look at this answer on StackOverflow
+            // https://stackoverflow.com/a/48554738/2996339
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    public override int SaveChanges()
         {
             AddAuitInfo();
             return base.SaveChanges();

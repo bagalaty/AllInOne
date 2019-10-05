@@ -3,14 +3,16 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Services.Migrations
 {
     [DbContext(typeof(EntityContext))]
-    partial class EntityContextModelSnapshot : ModelSnapshot
+    [Migration("20191005223333_Audit Columns")]
+    partial class AuditColumns
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -28,8 +30,6 @@ namespace Services.Migrations
                     b.Property<DateTime>("CreatedAt");
 
                     b.Property<string>("CreatedBy");
-
-                    b.Property<DateTime>("CreatedDate");
 
                     b.Property<DateTime>("CreatedOn");
 
@@ -54,8 +54,6 @@ namespace Services.Migrations
                         .IsRequired()
                         .HasMaxLength(110);
 
-                    b.Property<DateTime>("UpdatedDate");
-
                     b.HasKey("Id");
 
                     b.ToTable("Bookmarks");
@@ -72,8 +70,6 @@ namespace Services.Migrations
                     b.Property<DateTime>("CreatedAt");
 
                     b.Property<string>("CreatedBy");
-
-                    b.Property<DateTime>("CreatedDate");
 
                     b.Property<string>("Email");
 
@@ -92,8 +88,6 @@ namespace Services.Migrations
                     b.Property<string>("Name");
 
                     b.Property<string>("Phone");
-
-                    b.Property<DateTime>("UpdatedDate");
 
                     b.HasKey("Id");
 
@@ -116,8 +110,6 @@ namespace Services.Migrations
 
                     b.Property<string>("CreatedBy");
 
-                    b.Property<DateTime>("CreatedDate");
-
                     b.Property<DateTime>("LastUpdatedAt");
 
                     b.Property<string>("LastUpdatedBy");
@@ -129,8 +121,6 @@ namespace Services.Migrations
                     b.Property<string>("ThumbImage");
 
                     b.Property<string>("Title");
-
-                    b.Property<DateTime>("UpdatedDate");
 
                     b.HasKey("Id");
 
