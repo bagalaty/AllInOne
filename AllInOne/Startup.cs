@@ -116,16 +116,17 @@ namespace AllInOne
                             Description = description.IsDeprecated ?
                             $"{this.GetType().Assembly.GetCustomAttribute<AssemblyDescriptionAttribute>().Description} - DEPRECATED" : 
                             this.GetType().Assembly.GetCustomAttribute<AssemblyDescriptionAttribute>().Description,
-
+                            TermsOfService = "https://example.com/terms",
+                            Contact = new Contact{Name = "Ahmed BaGaLaTy",Email = string.Empty,Url = "https://twitter.com/BaGaLaTy"},
+                            License = new License{Name = "Use under LICX",Url = "https://example.com/license"}
                         });
                     }
 
-            // Add a custom filter for settint the default values  
-            options.OperationFilter<SwaggerDefaultValues>();
+                    options.AddSecurityDefinition("Bearer", new ApiKeyScheme { In = "header", Name = "Authorization", Type = "apiKey" });
 
 
-
-
+                    // Add a custom filter for settint the default values  
+                    options.OperationFilter<SwaggerDefaultValues>();
 
             // Tells swagger to pick up the output XML document file  
             options.IncludeXmlComments(Path.Combine(
