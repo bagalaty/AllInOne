@@ -10,7 +10,7 @@ namespace AllInOne.Controllers.V1
     /// Values Controller
     /// </summary>
     [ApiVersion(ApiRoutes.VersionNumber)]
-    [Route("api/[controller]")]
+    [Route("api/v{version:apiVersion}/[controller]")]
     [ApiController]
     public class ValuesController : ControllerBase
     {
@@ -31,7 +31,7 @@ namespace AllInOne.Controllers.V1
         /// GET api/values
         /// </summary>
         /// <returns></returns>
-        [HttpGet(ApiRoutes.Bookmark.GetAll)]
+        [HttpGet]
         public ActionResult<IEnumerable<Bookmark>> Get()
         {
             var bookmarkList = extityContext.Bookmarks.ToList();

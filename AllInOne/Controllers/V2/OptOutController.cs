@@ -7,9 +7,9 @@ namespace AllInOne.Controllers.OptOut.V2
     /// <summary>
     /// 
     /// </summary>
-    [ApiVersion(ApiRoutes.VersionNumber)]
     [Produces("application/json")]
-    [Route("api/[controller]")]
+    [ApiVersion(ApiRoutes.VersionNumber)]
+    [Route("api/v{version:apiVersion}/[controller]")]
     [ApiController]
     public class OptOutController : ControllerBase
     {

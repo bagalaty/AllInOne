@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using AllInOne.Controllers;
@@ -68,113 +70,69 @@ namespace AllInOne
 
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
- .AddJwtBearer(options =>
- {
-     options.TokenValidationParameters = new TokenValidationParameters
-     {
-         ValidateIssuer = true,
-         ValidateAudience = true,
-         ValidateLifetime = true,
-         ValidateIssuerSigningKey = true,
-         ValidIssuer = Configuration["JwtSettings:Issuer"],
-         ValidAudience = Configuration["JwtSettings:Issuer"],
-         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JwtSettings:Key"]))
-     };
- });
+                     .AddJwtBearer(options =>
+                     {
+                         options.TokenValidationParameters = new TokenValidationParameters
+                         {
+                             ValidateIssuer = true,
+                             ValidateAudience = true,
+                             ValidateLifetime = true,
+                             ValidateIssuerSigningKey = true,
+                             ValidIssuer = Configuration["JwtSettings:Issuer"],
+                             ValidAudience = Configuration["JwtSettings:Issuer"],
+                             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JwtSettings:Key"]))
+                         };
+                     });
+
+         
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
-
-            /*
-               services.AddApiVersioning();
-              services.AddApiVersioning(o => {
-                  //o.ApiVersionReader = new HeaderApiVersionReader("api-version");
-                  //o.ReportApiVersions = true;
-                  //o.DefaultApiVersion = new ApiVersion(1, 0);
-                  //o.Conventions.Controller<HelloWorldController>().HasApiVersion(new ApiVersion(2, 0));
-                  //o.Conventions.Controller<HelloWorld2Controller>().HasApiVersion(new ApiVersion(3, 0));
-                  // o.Conventions.Controller<HomeV2Controller>().HasApiVersion(new ApiVersion(3, 0));
-
-              });
-               */
-
-
-            services.AddApiVersioning(o => { o.ApiVersionReader = new HeaderApiVersionReader("api-version");
-                o.AssumeDefaultVersionWhenUnspecified = true;
-            }
-            );
-
-
-
-            services.AddSwaggerGen(c =>
+            services.AddMvcCore()
+      .AddJsonFormatters()
+      .AddVersionedApiExplorer(
+            options =>
             {
-                c.SwaggerDoc("v1", new Info
-                {
-                    Title = "My API",
-                    Version = "v1",
-                    Description = "All In One API detail description",
-                    TermsOfService = "https://example.com/terms",
-                    Contact = new Contact
-                    {
-                        Name = "Ahmed BaGaLaTy",
-                        Email = string.Empty,
-                        Url = "https://twitter.com/BaGaLaTy"
-                    },
-                    License = new License
-                    {
-                        Name = "Use under LICX",
-                        Url = "https://example.com/license"
-                    }
-                });
-                c.SwaggerDoc("v2", new Info
-                {
-                    Title = "My API 2",
-                    Version = "v2",
-                    Description = "All In One API detail description",
-                    TermsOfService = "https://example.com/terms",
-                    Contact = new Contact
-                    {
-                        Name = "Ahmed BaGaLaTy",
-                        Email = string.Empty,
-                        Url = "https://twitter.com/BaGaLaTy"
-                    },
-                    License = new License
-                    {
-                        Name = "Use under LICX",
-                        Url = "https://example.com/license"
-                    }
-                });
-                c.SwaggerDoc("v3", new Info
-                {
-                    Title = "My API 3",
-                    Version = "v3",
-                    Description = "All In One API detail description",
-                    TermsOfService = "https://example.com/terms",
-                    Contact = new Contact
-                    {
-                        Name = "Ahmed BaGaLaTy",
-                        Email = string.Empty,
-                        Url = "https://twitter.com/BaGaLaTy"
-                    },
-                    License = new License
-                    {
-                        Name = "Use under LICX",
-                        Url = "https://example.com/license"
-                    }
-                });
-                c.AddSecurityDefinition("Bearer",
-                     new ApiKeyScheme
-                     {
-                         In = "header",
-                         Name = "Authorization",
-                         Type = "apiKey"
-                     });
-                c.AddSecurityRequirement(new Dictionary<string, IEnumerable<string>> {
-                    { "Bearer bogy",Enumerable.Empty<string>() },
-                                        //{ "Bearer",Enumerable.Empty<string>() },
+                  //The format of the version added to the route URL  
+                  options.GroupNameFormat = "'v'VVV";
+                  //Tells swagger to replace the version in the controller route  
+                  options.SubstituteApiVersionInUrl = true;
+            }); ;
 
-                    });
-            });
+            services.AddApiVersioning(options => options.ReportApiVersions = true);
+            services.AddSwaggerGen(
+                options =>
+                {
+            // Resolve the temprary IApiVersionDescriptionProvider service  
+            var provider = services.BuildServiceProvider().GetRequiredService<IApiVersionDescriptionProvider>();
+
+            // Add a swagger document for each discovered API version  
+            foreach (var description in provider.ApiVersionDescriptions)
+                    {
+                        options.SwaggerDoc(description.GroupName, new Info()
+                        {
+                            Title = $"{this.GetType().Assembly.GetCustomAttribute<AssemblyProductAttribute>().Product} {description.ApiVersion}",
+                            Version = description.ApiVersion.ToString(),
+                            Description = description.IsDeprecated ?
+                            $"{this.GetType().Assembly.GetCustomAttribute<AssemblyDescriptionAttribute>().Description} - DEPRECATED" : 
+                            this.GetType().Assembly.GetCustomAttribute<AssemblyDescriptionAttribute>().Description,
+
+                        });
+                    }
+
+            // Add a custom filter for settint the default values  
+            options.OperationFilter<SwaggerDefaultValues>();
+
+
+
+
+
+            // Tells swagger to pick up the output XML document file  
+            options.IncludeXmlComments(Path.Combine(
+                        Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), $"{this.GetType().Assembly.GetName().Name}.xml"
+                        ));
+
+                });
         }
 
         /// <summary>
@@ -182,7 +140,7 @@ namespace AllInOne
         /// </summary>
         /// <param name="app">IApplicationBuilder</param>
         /// <param name="env">IHostingEnvironment</param>
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, IApiVersionDescriptionProvider provider)
         {
             _logger.LogInformation("Configure called");
 
@@ -215,29 +173,24 @@ namespace AllInOne
 
             app.UseAuthentication();
 
-            app.UseMvc();
+          
 
           //  IServiceCollection services = new ServiceCollection();
 
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
-                // note: need a temporary service provider here because one has not been created yet
-                //var provider = services.BuildServiceProvider()
-                //                       .GetRequiredService<IApiVersionDescriptionProvider>();
+              
 
-                //foreach (var description in provider.ApiVersionDescriptions)
-                //{
-                //    c.SwaggerEndpoint(
-                //        $"/swagger/{description.GroupName}/swagger.json",
-                //        description.GroupName.ToUpperInvariant());
-                //}
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Values Api V1");
-                //c.SwaggerEndpoint("/swagger/v2/swagger.json", "Values Api V2");
-                //c.SwaggerEndpoint("/swagger/v3/swagger.json", "Values Api V3");
-
+                //Build a swagger endpoint for each discovered API version  
+                foreach (var description in provider.ApiVersionDescriptions)
+                {
+                    c.SwaggerEndpoint($"/swagger/{description.GroupName}/swagger.json", description.GroupName.ToUpperInvariant());
+                }
 
             });
+
+            app.UseMvc();
         }
     }
 }

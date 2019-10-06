@@ -86,7 +86,7 @@
         </member>
         <member name="T:AllInOne.Controllers.V1.BookmarkController">
             <summary>
-            
+            Sample versioning REST API  
             </summary>
         </member>
         <member name="P:AllInOne.Controllers.V1.BookmarkController.extityContext">
@@ -248,6 +248,24 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="T:AllInOne.Program">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:AllInOne.Program.Main(System.String[])">
+            <summary>
+            
+            </summary>
+            <param name="args"></param>
+        </member>
+        <member name="M:AllInOne.Program.CreateWebHostBuilder(System.String[])">
+            <summary>
+            
+            </summary>
+            <param name="args"></param>
+            <returns></returns>
+        </member>
         <member name="T:AllInOne.Startup">
             <summary>
             
@@ -271,12 +289,26 @@
             </summary>
             <param name="services">IServiceCollection</param>
         </member>
-        <member name="M:AllInOne.Startup.Configure(Microsoft.AspNetCore.Builder.IApplicationBuilder,Microsoft.AspNetCore.Hosting.IHostingEnvironment)">
+        <member name="M:AllInOne.Startup.Configure(Microsoft.AspNetCore.Builder.IApplicationBuilder,Microsoft.AspNetCore.Hosting.IHostingEnvironment,Microsoft.AspNetCore.Mvc.ApiExplorer.IApiVersionDescriptionProvider)">
             <summary>
             This method gets called by the runtime. Use this method to configure the HTTP request pipeline
             </summary>
             <param name="app">IApplicationBuilder</param>
             <param name="env">IHostingEnvironment</param>
+        </member>
+        <member name="T:AllInOne.SwaggerDefaultValues">
+            <summary>  
+            Represents the Swagger/Swashbuckle operation filter used to document the implicit API version parameter.  
+            </summary>  
+            <remarks>This <see cref="T:Swashbuckle.AspNetCore.SwaggerGen.IOperationFilter"/> is only required due to bugs in the <see cref="T:Swashbuckle.AspNetCore.SwaggerGen.SwaggerGenerator"/>.  
+            Once they are fixed and published, this class can be removed.</remarks>  
+        </member>
+        <member name="M:AllInOne.SwaggerDefaultValues.Apply(Swashbuckle.AspNetCore.Swagger.Operation,Swashbuckle.AspNetCore.SwaggerGen.OperationFilterContext)">
+            <summary>  
+            Applies the filter to the specified operation using the given context.  
+            </summary>  
+            <param name="operation">The operation to apply the filter to.</param>  
+            <param name="context">The current operation filter context.</param>  
         </member>
     </members>
 </doc>

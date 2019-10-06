@@ -15,7 +15,7 @@ namespace AllInOne.Controllers.V2
     /// 
     /// </summary>
     [ApiVersion(ApiRoutes.VersionNumber)]
-    [Route("api/[controller]")]
+    [Route("api/v{version:apiVersion}/[controller]")]
     [ApiController]
     public class LoginController : ControllerBase
     {

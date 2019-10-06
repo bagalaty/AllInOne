@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AllInOne.Contract.V1;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Services.Models;
@@ -11,7 +12,8 @@ namespace AllInOne.Controllers.V1
     /// <summary>
     /// 
     /// </summary>
-    [Route("api/[controller]")]
+    [ApiVersion(ApiRoutes.VersionNumber)]
+    [Route("api/v{version:apiVersion}/[controller]")]
     [ApiController]
     public class DefaultController : ControllerBase
     {
