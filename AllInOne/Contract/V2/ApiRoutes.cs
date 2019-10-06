@@ -37,5 +37,13 @@ namespace AllInOne.Contract.V2
             /// </summary>
             public const string GetAll = Base + "/Bookmark";
         }
+
+        public static class OptOut
+        {
+            /// <summary>
+            /// 
+            /// </summary>
+            public const string GetAll = Base + "/Bookmark";
+        }
     }
 }

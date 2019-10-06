@@ -1,4 +1,4 @@
-﻿using AllInOne.Contract.V2;
+﻿using AllInOne.Contract.V1;
 using Microsoft.AspNetCore.Mvc;
 using Services.Models;
 using System.Collections.Generic;
@@ -31,10 +31,10 @@ namespace AllInOne.Controllers.V1
         /// GET api/values
         /// </summary>
         /// <returns></returns>
-        [HttpGet]
+        [HttpGet(ApiRoutes.Bookmark.GetAll)]
         public ActionResult<IEnumerable<Bookmark>> Get()
         {
-            var bookmarkList=extityContext.Bookmarks.ToList();
+            var bookmarkList = extityContext.Bookmarks.ToList();
             return bookmarkList;
         }
 

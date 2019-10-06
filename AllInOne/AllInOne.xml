@@ -39,6 +39,11 @@
             
             </summary>
         </member>
+        <member name="F:AllInOne.Contract.V1.ApiRoutes.OptOut.GetAll">
+            <summary>
+            
+            </summary>
+        </member>
         <member name="T:AllInOne.Contract.V2.ApiRoutes">
             <summary>
             
@@ -70,6 +75,11 @@
             </summary>
         </member>
         <member name="F:AllInOne.Contract.V2.ApiRoutes.Bookmark.GetAll">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:AllInOne.Contract.V2.ApiRoutes.OptOut.GetAll">
             <summary>
             
             </summary>
@@ -140,6 +150,28 @@
             </summary>
             <param name="value"></param>
         </member>
+        <member name="T:AllInOne.Controllers.OptOut.V1.OptOutController">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:AllInOne.Controllers.OptOut.V1.OptOutController.Get">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:AllInOne.Controllers.OptOut.V2.OptOutController">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:AllInOne.Controllers.OptOut.V2.OptOutController.Get">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
         <member name="T:AllInOne.Controllers.V2.BookmarkController">
             <summary>
             
@@ -160,6 +192,38 @@
             <summary>
             GET api/values
             </summary>
+            <returns></returns>
+        </member>
+        <member name="T:AllInOne.Controllers.V2.LoginController">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:AllInOne.Controllers.V2.LoginController.#ctor(Microsoft.Extensions.Configuration.IConfiguration)">
+            <summary>
+            
+            </summary>
+            <param name="config"></param>
+        </member>
+        <member name="M:AllInOne.Controllers.V2.LoginController.Login(Services.Models.UserDAO)">
+            <summary>
+            
+            </summary>
+            <param name="login"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AllInOne.Controllers.V2.LoginController.GenerateJSONWebToken(Services.Models.UserDAO)">
+            <summary>
+            
+            </summary>
+            <param name="userInfo"></param>
+            <returns></returns>
+        </member>
+        <member name="M:AllInOne.Controllers.V2.LoginController.AuthenticateUser(Services.Models.UserDAO)">
+            <summary>
+            
+            </summary>
+            <param name="login"></param>
             <returns></returns>
         </member>
         <member name="T:AllInOne.Controllers.V2.ValuesController">

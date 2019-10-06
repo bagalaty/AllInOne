@@ -1,40 +1,26 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using AllInOne.Contract.V1;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace AllInOne.Controllers.V1
+
+
+namespace AllInOne.Controllers.OptOut.V1
 {
-
-    [ApiVersionNeutral]
-    [Route("api/optout")]
-    public class OptOutControler : ControllerBase
-    {
-        [HttpGet]
-        public string Get() => HttpContext.GetRequestedApiVersion().ToString();
-    }
-
-    namespace AllInOne.Controllers.OptOut.V1
-    {
-        [ApiVersion("1.0")]
+    /// <summary>
+    /// 
+    /// </summary>
+    [ApiVersion(ApiRoutes.VersionNumber)]
         [Produces("application/json")]
-        [Route("api/Product")]
+        [Route("api/[controller]")]
         [ApiController]
         public class OptOutController : ControllerBase
         {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
+            [HttpGet(ApiRoutes.OptOut.GetAll)]
+            public string Get() => HttpContext.GetRequestedApiVersion().ToString();
         }
     }
 
-    namespace AllInOne.Controllers.OptOut.V2
-    {
-        [ApiVersion("2.0")]
-        [Produces("application/json")]
-        [Route("api/Product")]
-        [ApiController]
-        public class OptOutController : ControllerBase
-        {
-        }
-    }
-}

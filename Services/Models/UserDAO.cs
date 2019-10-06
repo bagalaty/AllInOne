@@ -7,6 +7,7 @@ using Newtonsoft.Json;
 using Core.Model.OAuth;
 using Services;
 using Microsoft.Extensions.Primitives;
+using System.Security.Claims;
 
 namespace Services.Models
 {
@@ -88,5 +89,7 @@ namespace Services.Models
         public bool IsOwner { get; set; }
         public bool emailNotification { get; set; }
         public string school { get; set; }
+        public DateTime DateOfJoing { get; set; }
+        public string Username { get; set; }
     }
 }
