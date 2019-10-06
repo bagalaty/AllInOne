@@ -4,69 +4,185 @@
         <name>AllInOne</name>
     </assembly>
     <members>
-        <member name="T:AllInOne.Controllers.DefaultController">
+        <member name="T:AllInOne.Contract.V1.ApiRoutes">
             <summary>
             
             </summary>
         </member>
-        <member name="P:AllInOne.Controllers.DefaultController.extityContext">
+        <member name="F:AllInOne.Contract.V1.ApiRoutes.Root">
             <summary>
             
             </summary>
         </member>
-        <member name="M:AllInOne.Controllers.DefaultController.#ctor(EntityContext)">
+        <member name="F:AllInOne.Contract.V1.ApiRoutes.Version">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:AllInOne.Contract.V1.ApiRoutes.VersionNumber">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:AllInOne.Contract.V1.ApiRoutes.Base">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:AllInOne.Contract.V1.ApiRoutes.Bookmark">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:AllInOne.Contract.V1.ApiRoutes.Bookmark.GetAll">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:AllInOne.Contract.V2.ApiRoutes">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:AllInOne.Contract.V2.ApiRoutes.Root">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:AllInOne.Contract.V2.ApiRoutes.Version">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:AllInOne.Contract.V2.ApiRoutes.VersionNumber">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:AllInOne.Contract.V2.ApiRoutes.Base">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:AllInOne.Contract.V2.ApiRoutes.Bookmark">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:AllInOne.Contract.V2.ApiRoutes.Bookmark.GetAll">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:AllInOne.Controllers.V1.BookmarkController">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:AllInOne.Controllers.V1.BookmarkController.extityContext">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:AllInOne.Controllers.V1.BookmarkController.#ctor(EntityContext)">
             <summary>
             
             </summary>
             <param name="context"></param>
         </member>
-        <member name="T:AllInOne.Controllers.ValuesController">
-            <summary>
-            Values Controller
-            </summary>
-        </member>
-        <member name="P:AllInOne.Controllers.ValuesController.extityContext">
-            <summary>
-            
-            </summary>
-        </member>
-        <member name="M:AllInOne.Controllers.ValuesController.#ctor(EntityContext)">
-            <summary>
-            
-            </summary>
-            <param name="context"></param>
-        </member>
-        <member name="M:AllInOne.Controllers.ValuesController.Get">
+        <member name="M:AllInOne.Controllers.V1.BookmarkController.Get">
             <summary>
             GET api/values
             </summary>
             <returns></returns>
         </member>
-        <member name="M:AllInOne.Controllers.ValuesController.Get(System.Int32)">
+        <member name="T:AllInOne.Controllers.V1.DefaultController">
             <summary>
-             GET api/values/5
+            
             </summary>
-            <param name="id"></param>
+        </member>
+        <member name="P:AllInOne.Controllers.V1.DefaultController.extityContext">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:AllInOne.Controllers.V1.DefaultController.#ctor(EntityContext)">
+            <summary>
+            
+            </summary>
+            <param name="context"></param>
+        </member>
+        <member name="T:AllInOne.Controllers.V1.ValuesController">
+            <summary>
+            Values Controller
+            </summary>
+        </member>
+        <member name="P:AllInOne.Controllers.V1.ValuesController.extityContext">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:AllInOne.Controllers.V1.ValuesController.#ctor(EntityContext)">
+            <summary>
+            
+            </summary>
+            <param name="context"></param>
+        </member>
+        <member name="M:AllInOne.Controllers.V1.ValuesController.Get">
+            <summary>
+            GET api/values
+            </summary>
             <returns></returns>
         </member>
-        <member name="M:AllInOne.Controllers.ValuesController.Post(Services.Models.Bookmark)">
+        <member name="M:AllInOne.Controllers.V1.ValuesController.Post(Services.Models.Bookmark)">
             <summary>
             POST api/values
             </summary>
             <param name="value"></param>
         </member>
-        <member name="M:AllInOne.Controllers.ValuesController.Put(System.Int32,System.String)">
+        <member name="T:AllInOne.Controllers.V2.BookmarkController">
             <summary>
-            PUT api/values/5
+            
             </summary>
-            <param name="id"></param>
-            <param name="value"></param>
         </member>
-        <member name="M:AllInOne.Controllers.ValuesController.Delete(System.Int32)">
+        <member name="P:AllInOne.Controllers.V2.BookmarkController.extityContext">
             <summary>
-            DELETE api/values/5
+            
             </summary>
-            <param name="id"></param>
+        </member>
+        <member name="M:AllInOne.Controllers.V2.BookmarkController.#ctor(EntityContext)">
+            <summary>
+            
+            </summary>
+            <param name="context"></param>
+        </member>
+        <member name="M:AllInOne.Controllers.V2.BookmarkController.Get">
+            <summary>
+            GET api/values
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:AllInOne.Controllers.V2.ValuesController">
+            <summary>
+            Values Controller
+            </summary>
+        </member>
+        <member name="P:AllInOne.Controllers.V2.ValuesController.extityContext">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:AllInOne.Controllers.V2.ValuesController.#ctor(EntityContext)">
+            <summary>
+            
+            </summary>
+            <param name="context"></param>
+        </member>
+        <member name="M:AllInOne.Controllers.V2.ValuesController.Get">
+            <summary>
+            GET api/values
+            </summary>
+            <returns></returns>
         </member>
         <member name="T:AllInOne.Startup">
             <summary>

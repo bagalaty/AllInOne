@@ -5,13 +5,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace AllInOne.Controllers
+namespace AllInOne.Controllers.V1
 {
-    //[Route("api/[controller]")]
-    //[ApiController]
-    //public class ProductController : ControllerBase
-    //{
-    //}
 
     [ApiVersionNeutral]
     [Route("api/optout")]
@@ -21,24 +16,24 @@ namespace AllInOne.Controllers
         public string Get() => HttpContext.GetRequestedApiVersion().ToString();
     }
 
-    namespace AllInOne.Controllers.Product.V1
+    namespace AllInOne.Controllers.OptOut.V1
     {
         [ApiVersion("1.0")]
         [Produces("application/json")]
         [Route("api/Product")]
         [ApiController]
-        public class ProductController : ControllerBase
+        public class OptOutController : ControllerBase
         {
         }
     }
 
-    namespace AllInOne.Controllers.Product.V2
+    namespace AllInOne.Controllers.OptOut.V2
     {
         [ApiVersion("2.0")]
         [Produces("application/json")]
         [Route("api/Product")]
         [ApiController]
-        public class ProductController : ControllerBase
+        public class OptOutController : ControllerBase
         {
         }
     }

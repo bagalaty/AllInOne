@@ -2,20 +2,21 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AllInOne.Contract.V2;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Services.Models;
 
-namespace AllInOne.Controllers
+namespace AllInOne.Controllers.V2
 {
     /// <summary>
     /// 
     /// </summary>
+    [ApiVersion(ApiRoutes.VersionNumber)]
     [Route("api/[controller]")]
     [ApiController]
-    public class DefaultController : ControllerBase
+    public class BookmarkController : ControllerBase
     {
-
         /// <summary>
         /// 
         /// </summary>
@@ -24,13 +25,16 @@ namespace AllInOne.Controllers
         /// 
         /// </summary>
         /// <param name="context"></param>
-        public DefaultController(EntityContext context)
+        public BookmarkController(EntityContext context)
         {
             extityContext = context;
         }
 
-        [ApiVersion("1.0")]
-        [HttpGet]
+        /// <summary>
+        /// GET api/values
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet(ApiRoutes.Bookmark.GetAll)]
         public ActionResult<IEnumerable<Bookmark>> Get()
         {
             var bookmarkList = extityContext.Bookmarks.ToList();
