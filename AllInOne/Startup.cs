@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
@@ -64,6 +65,9 @@ namespace AllInOne
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"),
                     assembly => assembly.MigrationsAssembly(typeof(EntityContext).Assembly.FullName));
             });
+
+            services.AddIdentity<IdentityUser, IdentityRole>()
+                .AddEntityFrameworkStores<EntityContext>();
 
 
             services.AddLocalization(options => options.ResourcesPath = "Resources");
@@ -171,7 +175,7 @@ namespace AllInOne
             };
 
             app.UseRequestLocalization(options);
-
+            app.UseStaticFiles();
             app.UseAuthentication();
 
           
