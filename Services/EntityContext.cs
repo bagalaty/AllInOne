@@ -1,15 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Services.Models;
+using Services.Models.Interfaces;
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Text;
-using System.Threading.Tasks;
 using System.Linq;
 using System.Threading;
-using Services.Models.Interfaces;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using System.Threading.Tasks;
 
 public class EntityContext : IdentityDbContext
 {
@@ -20,6 +16,8 @@ public class EntityContext : IdentityDbContext
     }
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
+
+        //optionsBuilder.UseMySQL("server=localhost;database=allinone;user=sa;password=P@ssw0rd159");
 
         //var connection = new AppConfiguration().ConnectionString;
         //optionsBuilder.UseSqlServer(connection);

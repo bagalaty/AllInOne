@@ -84,6 +84,47 @@
             
             </summary>
         </member>
+        <member name="T:AllInOne.Controllers.V1.AppController">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:AllInOne.Controllers.V1.AppController.Version">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:AllInOne.Controllers.V1.AppController.ProductName">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:AllInOne.Controllers.V1.AppController.DefaultPage">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:AllInOne.Controllers.V1.AppController.AppSettings">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:AllInOne.Controllers.V1.AppController._distributedCache">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:AllInOne.Controllers.V1.AppController.#ctor(Microsoft.Extensions.Caching.Distributed.IDistributedCache)">
+            <summary>
+            
+            </summary>
+            <param name="distributedCache"></param>
+        </member>
+        <member name="P:AllInOne.Controllers.V1.AppController.CurrentUser">
+            <summary>
+            
+            </summary>
+        </member>
         <member name="T:AllInOne.Controllers.V1.BookmarkController">
             <summary>
             Sample versioning REST API  
@@ -106,6 +147,12 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="M:AllInOne.Controllers.V1.BookmarkController.Post(Services.Models.Bookmark)">
+            <summary>
+            POST api/values
+            </summary>
+            <param name="value"></param>
+        </member>
         <member name="T:AllInOne.Controllers.V1.DefaultController">
             <summary>
             
@@ -127,12 +174,12 @@
             Values Controller
             </summary>
         </member>
-        <member name="P:AllInOne.Controllers.V1.ValuesController.extityContext">
+        <member name="P:AllInOne.Controllers.V1.ValuesController.entityContextmySql">
             <summary>
             
             </summary>
         </member>
-        <member name="M:AllInOne.Controllers.V1.ValuesController.#ctor(EntityContext)">
+        <member name="M:AllInOne.Controllers.V1.ValuesController.#ctor(allinoneContext)">
             <summary>
             
             </summary>
@@ -247,6 +294,40 @@
             GET api/values
             </summary>
             <returns></returns>
+        </member>
+        <member name="T:AllInOne.Filters.BackEndAuthorizationHandler">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:AllInOne.Filters.BackEndAuthorizationHandler.#ctor(Services.Repositories.IUnitOfWork)">
+            <summary>
+            
+            </summary>
+            <param name="unitOfWork"></param>
+        </member>
+        <member name="M:AllInOne.Filters.BackEndAuthorizationHandler.HandleRequirementAsync(Microsoft.AspNetCore.Authorization.AuthorizationHandlerContext,AllInOne.Filters.BackEndAuthRequirement)">
+            <summary>
+            
+            </summary>
+            <param name="context"></param>
+            <param name="requirement"></param>
+            <returns></returns>
+        </member>
+        <member name="T:AllInOne.Filters.BackEndAuthRequirement">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:AllInOne.Helpers.CryptographyFunctions">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:AllInOne.Helpers.CryptographyFunctions.HashFunction">
+            <summary>
+            
+            </summary>
         </member>
         <member name="T:AllInOne.Program">
             <summary>
