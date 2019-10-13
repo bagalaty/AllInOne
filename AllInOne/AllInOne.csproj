@@ -10,6 +10,10 @@
     <DocumentationFile>C:\Users\Lenovo\Desktop\projects\AllInOne\AllInOne\AllInOne.xml</DocumentationFile>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Remove="Dockerfile" />
+  </ItemGroup>
+
   <!--<ItemGroup>
     <Compile Include="..\Services\MigrationsMySql\allinoneContext.cs" Link="allinoneContext.cs" />
   </ItemGroup>-->
