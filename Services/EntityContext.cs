@@ -1,43 +1,44 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Services.Models;
+using Services.Models.Interfaces;
 using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Text;
-using System.Threading.Tasks;
 using System.Linq;
 using System.Threading;
-using Services.Models.Interfaces;
+using System.Threading.Tasks;
 
-public class EntityContext : DbContext
+public class EntityContext : IdentityDbContext
+{
+    public EntityContext(DbContextOptions<EntityContext> options)
+       : base(options)
     {
-        public EntityContext(DbContextOptions<EntityContext> options)
-           : base(options)
-        {
-       
-        }
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-       
+
+    }
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+
+        //optionsBuilder.UseMySQL("server=localhost;database=allinone;user=sa;password=P@ssw0rd159");
+
         //var connection = new AppConfiguration().ConnectionString;
         //optionsBuilder.UseSqlServer(connection);
-        
+
         optionsBuilder.EnableSensitiveDataLogging();
 
         base.OnConfiguring(optionsBuilder);
-        }
+    }
 
 
-        public DbSet<Employee> Employees { get; set; }
-        public DbSet<Post> Posts { get; set; }
-        public DbSet<Bookmark> Bookmarks { get; set; }
+    public DbSet<Employee> Employees { get; set; }
+    public DbSet<Post> Posts { get; set; }
+    public DbSet<Bookmark> Bookmarks { get; set; }
 
-        //public DbSet<Course> Courses { get; set; }
+    //public DbSet<Course> Courses { get; set; }
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-        
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        base.OnModelCreating(modelBuilder);
+
+
         var allEntities = modelBuilder.Model.GetEntityTypes();
 
         foreach (var entity in allEntities)
@@ -62,11 +63,11 @@ public class EntityContext : DbContext
         //});
 
         modelBuilder.Entity<Employee>().ToTable("Employee");
-            modelBuilder.Entity<Post>().ToTable("Post");
-            modelBuilder.Entity<Bookmark>().ToTable("Bookmarks");
+        modelBuilder.Entity<Post>().ToTable("Post");
+        modelBuilder.Entity<Bookmark>().ToTable("Bookmarks");
 
-            //  modelBuilder.Entity<Student>().ToTable("Student");
-        }
+        //  modelBuilder.Entity<Student>().ToTable("Student");
+    }
 
 
     public override int SaveChanges(bool acceptAllChangesOnSuccess)
@@ -89,7 +90,7 @@ public class EntityContext : DbContext
             if (entry.Entity is ITrackable trackable)
             {
                 var now = DateTime.UtcNow;
-                var user = GetCurrentUser() ;
+                var user = GetCurrentUser();
                 switch (entry.State)
                 {
                     case EntityState.Modified:
@@ -114,60 +115,45 @@ public class EntityContext : DbContext
             }
         }
 
-        
+
     }
 
     private string GetCurrentUser()
-        {
-            return "BaGaLaTy"; // TODO implement your own logic
+    {
+        return "BaGaLaTy"; // TODO implement your own logic
 
-            // If you are using ASP.NET Core, you should look at this answer on StackOverflow
-            // https://stackoverflow.com/a/48554738/2996339
-        }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        // If you are using ASP.NET Core, you should look at this answer on StackOverflow
+        // https://stackoverflow.com/a/48554738/2996339
+    }
 
 
 
     public override int SaveChanges()
-        {
-            AddAuitInfo();
-            return base.SaveChanges();
-        }
-
-        public async Task<int> SaveChangesAsync()
-        {
-            AddAuitInfo();
-            return await base.SaveChangesAsync();
-        }
-
-        private void AddAuitInfo()
-        {
-            var entries = ChangeTracker.Entries().Where(x => x.Entity is BaseModel
-            && (x.State == EntityState.Added 
-            || x.State == EntityState.Modified));
-            foreach (var entry in entries)
-            {
-                if (entry.State == EntityState.Added)
-                {
-              //      ((BaseModel)entry.Entity).Created = DateTime.UtcNow;
-                }
-           // ((BaseModel)entry.Entity).Modified = DateTime.UtcNow;
-            }
-        }
-
+    {
+        AddAuitInfo();
+        return base.SaveChanges();
     }
- 
+
+    public async Task<int> SaveChangesAsync()
+    {
+        AddAuitInfo();
+        return await base.SaveChangesAsync();
+    }
+
+    private void AddAuitInfo()
+    {
+        var entries = ChangeTracker.Entries().Where(x => x.Entity is BaseModel
+        && (x.State == EntityState.Added
+        || x.State == EntityState.Modified));
+        foreach (var entry in entries)
+        {
+            if (entry.State == EntityState.Added)
+            {
+                //      ((BaseModel)entry.Entity).Created = DateTime.UtcNow;
+            }
+            // ((BaseModel)entry.Entity).Modified = DateTime.UtcNow;
+        }
+    }
+
+}
+

@@ -17,14 +17,14 @@ namespace AllInOne.Controllers.V1
         /// <summary>
         /// 
         /// </summary>
-        public EntityContext extityContext { get; set; }
+        public allinoneContext entityContextmySql { get; set; }
         /// <summary>
         /// 
         /// </summary>
         /// <param name="context"></param>
-        public ValuesController(EntityContext context)
+        public ValuesController(allinoneContext context)
         {
-            extityContext = context;
+            entityContextmySql = context;
         }
 
         /// <summary>
@@ -34,7 +34,9 @@ namespace AllInOne.Controllers.V1
         [HttpGet]
         public ActionResult<IEnumerable<Bookmark>> Get()
         {
-            var bookmarkList = extityContext.Bookmarks.ToList();
+            entityContextmySql.Database.EnsureCreated();
+
+            var bookmarkList = entityContextmySql.Bookmarks.ToList();
             return bookmarkList;
         }
 
@@ -57,8 +59,8 @@ namespace AllInOne.Controllers.V1
         public void Post([FromBody] Bookmark value)
         {
             var item = value;
-            extityContext.Bookmarks.Add(item);
-            extityContext.SaveChanges();
+            entityContextmySql.Bookmarks.Add(item);
+            entityContextmySql.SaveChanges();
         }
 
         ///// <summary>

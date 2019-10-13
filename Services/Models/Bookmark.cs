@@ -1,13 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Text;
+using System.Diagnostics;
 
 namespace Services.Models
 {
+    [DebuggerDisplay("{Id} - {Title} - {IsDeleted} - {Description}")]
     public class Bookmark: BaseModel
     {
-        [Key]
+        [Key, MaxLength(38)]
         public Guid Id { get; set; } = Guid.NewGuid();
         [Required, MaxLength(100), StringLength(110)]
         public string Title { get; set; }

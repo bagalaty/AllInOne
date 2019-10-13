@@ -2,52 +2,41 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace Services.Migrations
+namespace Services.Migrations.allinone
 {
-    [DbContext(typeof(EntityContext))]
-    partial class EntityContextModelSnapshot : ModelSnapshot
+    [DbContext(typeof(allinoneContext))]
+    [Migration("20191012120124_MySQLInitialCreate")]
+    partial class MySQLInitialCreate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "2.2.6-servicing-10079")
-                .HasAnnotation("Relational:MaxIdentifierLength", 128)
-                .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                .HasAnnotation("ProductVersion", "2.2.6-servicing-10079");
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
                     b.Property<string>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(85);
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken();
-
-                    b.Property<DateTime>("Created");
-
-                    b.Property<DateTime>("CreatedDate");
-
-                    b.Property<string>("Message");
-
-                    b.Property<DateTime>("Modified");
 
                     b.Property<string>("Name")
                         .HasMaxLength(256);
 
                     b.Property<string>("NormalizedName")
-                        .HasMaxLength(256);
-
-                    b.Property<DateTime>("UpdatedDate");
+                        .HasMaxLength(85);
 
                     b.HasKey("Id");
 
                     b.HasIndex("NormalizedName")
                         .IsUnique()
-                        .HasName("RoleNameIndex")
-                        .HasFilter("[NormalizedName] IS NOT NULL");
+                        .HasName("RoleNameIndex");
 
                     b.ToTable("AspNetRoles");
                 });
@@ -56,24 +45,15 @@ namespace Services.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasMaxLength(85);
 
                     b.Property<string>("ClaimType");
 
                     b.Property<string>("ClaimValue");
 
-                    b.Property<DateTime>("Created");
-
-                    b.Property<DateTime>("CreatedDate");
-
-                    b.Property<string>("Message");
-
-                    b.Property<DateTime>("Modified");
-
                     b.Property<string>("RoleId")
-                        .IsRequired();
-
-                    b.Property<DateTime>("UpdatedDate");
+                        .IsRequired()
+                        .HasMaxLength(85);
 
                     b.HasKey("Id");
 
@@ -85,16 +65,13 @@ namespace Services.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUser", b =>
                 {
                     b.Property<string>("Id")
-                        .ValueGeneratedOnAdd();
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(85);
 
                     b.Property<int>("AccessFailedCount");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken();
-
-                    b.Property<DateTime>("Created");
-
-                    b.Property<DateTime>("CreatedDate");
 
                     b.Property<string>("Email")
                         .HasMaxLength(256);
@@ -105,15 +82,11 @@ namespace Services.Migrations
 
                     b.Property<DateTimeOffset?>("LockoutEnd");
 
-                    b.Property<string>("Message");
-
-                    b.Property<DateTime>("Modified");
-
                     b.Property<string>("NormalizedEmail")
-                        .HasMaxLength(256);
+                        .HasMaxLength(85);
 
                     b.Property<string>("NormalizedUserName")
-                        .HasMaxLength(256);
+                        .HasMaxLength(85);
 
                     b.Property<string>("PasswordHash");
 
@@ -125,8 +98,6 @@ namespace Services.Migrations
 
                     b.Property<bool>("TwoFactorEnabled");
 
-                    b.Property<DateTime>("UpdatedDate");
-
                     b.Property<string>("UserName")
                         .HasMaxLength(256);
 
@@ -137,8 +108,7 @@ namespace Services.Migrations
 
                     b.HasIndex("NormalizedUserName")
                         .IsUnique()
-                        .HasName("UserNameIndex")
-                        .HasFilter("[NormalizedUserName] IS NOT NULL");
+                        .HasName("UserNameIndex");
 
                     b.ToTable("AspNetUsers");
                 });
@@ -147,24 +117,15 @@ namespace Services.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasMaxLength(85);
 
                     b.Property<string>("ClaimType");
 
                     b.Property<string>("ClaimValue");
 
-                    b.Property<DateTime>("Created");
-
-                    b.Property<DateTime>("CreatedDate");
-
-                    b.Property<string>("Message");
-
-                    b.Property<DateTime>("Modified");
-
-                    b.Property<DateTime>("UpdatedDate");
-
                     b.Property<string>("UserId")
-                        .IsRequired();
+                        .IsRequired()
+                        .HasMaxLength(85);
 
                     b.HasKey("Id");
 
@@ -175,24 +136,17 @@ namespace Services.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.Property<string>("LoginProvider");
+                    b.Property<string>("LoginProvider")
+                        .HasMaxLength(85);
 
-                    b.Property<string>("ProviderKey");
-
-                    b.Property<DateTime>("Created");
-
-                    b.Property<DateTime>("CreatedDate");
-
-                    b.Property<string>("Message");
-
-                    b.Property<DateTime>("Modified");
+                    b.Property<string>("ProviderKey")
+                        .HasMaxLength(85);
 
                     b.Property<string>("ProviderDisplayName");
 
-                    b.Property<DateTime>("UpdatedDate");
-
                     b.Property<string>("UserId")
-                        .IsRequired();
+                        .IsRequired()
+                        .HasMaxLength(85);
 
                     b.HasKey("LoginProvider", "ProviderKey");
 
@@ -203,19 +157,11 @@ namespace Services.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
                 {
-                    b.Property<string>("UserId");
+                    b.Property<string>("UserId")
+                        .HasMaxLength(85);
 
-                    b.Property<string>("RoleId");
-
-                    b.Property<DateTime>("Created");
-
-                    b.Property<DateTime>("CreatedDate");
-
-                    b.Property<string>("Message");
-
-                    b.Property<DateTime>("Modified");
-
-                    b.Property<DateTime>("UpdatedDate");
+                    b.Property<string>("RoleId")
+                        .HasMaxLength(85);
 
                     b.HasKey("UserId", "RoleId");
 
@@ -226,21 +172,14 @@ namespace Services.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
                 {
-                    b.Property<string>("UserId");
+                    b.Property<string>("UserId")
+                        .HasMaxLength(85);
 
-                    b.Property<string>("LoginProvider");
+                    b.Property<string>("LoginProvider")
+                        .HasMaxLength(85);
 
-                    b.Property<string>("Name");
-
-                    b.Property<DateTime>("Created");
-
-                    b.Property<DateTime>("CreatedDate");
-
-                    b.Property<string>("Message");
-
-                    b.Property<DateTime>("Modified");
-
-                    b.Property<DateTime>("UpdatedDate");
+                    b.Property<string>("Name")
+                        .HasMaxLength(85);
 
                     b.Property<string>("Value");
 
@@ -251,16 +190,14 @@ namespace Services.Migrations
 
             modelBuilder.Entity("Services.Models.Bookmark", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<DateTime>("Created");
+                    b.Property<byte[]>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasConversion(new ValueConverter<byte[], byte[]>(v => default(byte[]), v => default(byte[]), new ConverterMappingHints(size: 16)))
+                        .HasMaxLength(38);
 
                     b.Property<DateTime>("CreatedAt");
 
                     b.Property<string>("CreatedBy");
-
-                    b.Property<DateTime>("CreatedDate");
 
                     b.Property<DateTime>("CreatedOn");
 
@@ -277,15 +214,9 @@ namespace Services.Migrations
 
                     b.Property<string>("LastUpdatedBy");
 
-                    b.Property<string>("Message");
-
-                    b.Property<DateTime>("Modified");
-
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasMaxLength(110);
-
-                    b.Property<DateTime>("UpdatedDate");
 
                     b.HasKey("Id");
 
@@ -294,17 +225,14 @@ namespace Services.Migrations
 
             modelBuilder.Entity("Services.Models.Employee", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<byte[]>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<DateTime>("Created");
+                        .HasConversion(new ValueConverter<byte[], byte[]>(v => default(byte[]), v => default(byte[]), new ConverterMappingHints(size: 16)))
+                        .HasMaxLength(38);
 
                     b.Property<DateTime>("CreatedAt");
 
                     b.Property<string>("CreatedBy");
-
-                    b.Property<DateTime>("CreatedDate");
 
                     b.Property<string>("Email");
 
@@ -316,15 +244,9 @@ namespace Services.Migrations
 
                     b.Property<string>("LastUpdatedBy");
 
-                    b.Property<string>("Message");
-
-                    b.Property<DateTime>("Modified");
-
                     b.Property<string>("Name");
 
                     b.Property<string>("Phone");
-
-                    b.Property<DateTime>("UpdatedDate");
 
                     b.HasKey("Id");
 
@@ -333,35 +255,26 @@ namespace Services.Migrations
 
             modelBuilder.Entity("Services.Models.Post", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<byte[]>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasConversion(new ValueConverter<byte[], byte[]>(v => default(byte[]), v => default(byte[]), new ConverterMappingHints(size: 16)))
+                        .HasMaxLength(38);
 
                     b.Property<DateTime>("AddDate");
 
                     b.Property<string>("Body");
 
-                    b.Property<DateTime>("Created");
-
                     b.Property<DateTime>("CreatedAt");
 
                     b.Property<string>("CreatedBy");
-
-                    b.Property<DateTime>("CreatedDate");
 
                     b.Property<DateTime>("LastUpdatedAt");
 
                     b.Property<string>("LastUpdatedBy");
 
-                    b.Property<string>("Message");
-
-                    b.Property<DateTime>("Modified");
-
                     b.Property<string>("ThumbImage");
 
                     b.Property<string>("Title");
-
-                    b.Property<DateTime>("UpdatedDate");
 
                     b.HasKey("Id");
 

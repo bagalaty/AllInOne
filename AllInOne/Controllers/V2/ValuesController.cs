@@ -58,8 +58,8 @@ namespace AllInOne.Controllers.V2
         //public void Post([FromBody] Bookmark value)
         //{
         //    var item = value;
-        //    extityContext.Bookmarks.Add(item);
-        //    extityContext.SaveChanges();
+        //    entityContextmySql.Bookmarks.Add(item);
+        //    entityContextmySql.SaveChanges();
         //}
 
         ///// <summary>

@@ -1,27 +1,31 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using AllInOne.Controllers;
+﻿using AllInOne.Filters;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
-using Microsoft.AspNetCore.Mvc.Versioning;
+using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using Services.Repositories;
 using Swashbuckle.AspNetCore.Swagger;
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
+using System.Reflection;
+using System.Text;
+using System.Text.Encodings.Web;
+using System.Text.Unicode;
 
 namespace AllInOne
 {
@@ -65,6 +69,44 @@ namespace AllInOne
                     assembly => assembly.MigrationsAssembly(typeof(EntityContext).Assembly.FullName));
             });
 
+            services.AddIdentity<IdentityUser, IdentityRole>()
+               .AddEntityFrameworkStores<EntityContext>();
+
+            //services.AddDbContext<allinoneContext>(options =>
+            // options.UseMySQL(Configuration.GetConnectionString("mysqlConnection")));
+
+            //services.AddIdentity<IdentityUser, IdentityRole>()
+            //    .AddEntityFrameworkStores<allinoneContext>();
+
+            services.Configure<IdentityOptions>(options =>
+            {
+                // Password settings
+                options.Password.RequireDigit = true;
+                options.Password.RequiredLength = 8;
+                options.Password.RequireNonAlphanumeric = true;
+                options.Password.RequireUppercase = true;
+                options.Password.RequireLowercase = true;
+
+                // Lockout settings
+                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(30);
+                options.Lockout.MaxFailedAccessAttempts = 10;
+
+                // User settings
+                options.User.RequireUniqueEmail = true;
+            });
+
+            // If you want to tweak Identity cookies, they're no longer part of IdentityOptions.
+            services.ConfigureApplicationCookie(options => options.LoginPath = "/Account/Login");
+
+            // If you don't want the cookie to be automatically authenticated and assigned to HttpContext.User, 
+            // remove the CookieAuthenticationDefaults.AuthenticationScheme parameter passed to AddAuthentication.
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                    .AddCookie(options => {
+                        options.LoginPath = "/Account/Login";
+                        options.LogoutPath = "/Account/Logout";
+                        options.ExpireTimeSpan = TimeSpan.FromDays(150);
+                    });
+
 
             services.AddLocalization(options => options.ResourcesPath = "Resources");
 
@@ -84,9 +126,40 @@ namespace AllInOne
                          };
                      });
 
-         
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+
+            services.AddAuthorization(options => options.AddPolicy("BackEndAuthRequirement", 
+                policyBuilder => policyBuilder.Requirements.Add(new BackEndAuthRequirement())));
+            services.AddSingleton<IAuthorizationHandler, BackEndAuthorizationHandler>();
+            services.AddSingleton<IUnitOfWork, UnitOfWork>();
+
+            services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
+            services.AddSingleton<HtmlEncoder>(
+          HtmlEncoder.Create(allowedRanges: new[]
+          {
+                UnicodeRanges.All,
+          }));
+
+            services.AddSession(options =>
+            {
+                // Set a short timeout for easy testing.
+                options.IdleTimeout = TimeSpan.FromSeconds(60 * 20);
+                options.Cookie.HttpOnly = true;
+            });
+
+            services.AddDataProtection();
+
+
+            services.AddMvc(
+                options =>
+                {
+                    var policy = new AuthorizationPolicyBuilder()
+                        .RequireAuthenticatedUser()
+                        .Build();
+                    options.Filters.Add(new AuthorizeFilter(policy));
+                    // ...
+                }).SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             services.AddMvcCore()
       .AddJsonFormatters()
@@ -98,6 +171,13 @@ namespace AllInOne
                   //Tells swagger to replace the version in the controller route  
                   options.SubstituteApiVersionInUrl = true;
             }); ;
+
+
+            services.AddDistributedRedisCache(option =>
+            {
+                option.Configuration = "127.0.0.1";
+                option.InstanceName = "master";
+            });
 
             services.AddApiVersioning(options => options.ReportApiVersions = true);
             services.AddSwaggerGen(
@@ -168,10 +248,14 @@ namespace AllInOne
                 DefaultRequestCulture = new RequestCulture("en-US"),
                 SupportedCultures = supportedCultures,
                 SupportedUICultures = supportedCultures,
+                RequestCultureProviders = new IRequestCultureProvider[] { new CookieRequestCultureProvider
+                {
+                    CookieName = CookieRequestCultureProvider.DefaultCookieName,
+                } }
             };
 
             app.UseRequestLocalization(options);
-
+            app.UseStaticFiles();
             app.UseAuthentication();
 
           
@@ -181,8 +265,6 @@ namespace AllInOne
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
-              
-
                 //Build a swagger endpoint for each discovered API version  
                 foreach (var description in provider.ApiVersionDescriptions)
                 {

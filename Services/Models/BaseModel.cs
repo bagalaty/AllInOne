@@ -1,5 +1,4 @@
-﻿using Core.Proxy.Http;
-using Services.Models.Enums;
+﻿using Services.Models.Enums;
 using Services.Models.Interfaces;
 using System;
 using System.ComponentModel.DataAnnotations;
@@ -14,8 +13,8 @@ namespace Services.Models
         { }
 
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        [Key]
-        public int Id { get; set; }
+        [Key, MaxLength(38)]
+        public Guid Id { get; set; }
         public DateTime CreatedAt { get ; set ; }
         public string CreatedBy { get ; set ; }
         public DateTime LastUpdatedAt { get ; set ; }
@@ -25,10 +24,10 @@ namespace Services.Models
         //public DateTime Created { get; set; }
         //[IgnoreDataMember]
         //public DateTime Modified { get; set; }
-        //[IgnoreDataMember]
-        //public string Message { get; set; }
-        //[IgnoreDataMember]
-        //public MessageType MessageType { get; set; }
+        [IgnoreDataMember]
+        public string Message { get; set; }
+        [IgnoreDataMember]
+        public MessageType MessageType { get; set; }
 
 
         //public BaseModel(AllInOneResponse response)

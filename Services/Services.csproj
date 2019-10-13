@@ -6,6 +6,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="2.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.Session" Version="2.0.1" />
 	 <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.2.6" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="2.2.6" />
@@ -13,10 +14,13 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="2.2.6" />
     <!--<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="2.2.6" />-->
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.2.6" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="2.0.3" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools.DotNet" Version="2.0.3" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="2.2.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="2.2.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="2.2.0" />
+    <PackageReference Include="MySql.Data.EntityFrameworkCore" Version="8.0.17" />
+    <PackageReference Include="MySql.Data.EntityFrameworkCore.Design" Version="8.0.17" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.2" />
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="4.6.0" />
   </ItemGroup>
@@ -27,8 +31,27 @@
 
   <ItemGroup>
     <Folder Include="Helpers\" />
-    <Folder Include="Resources\" />
-    <Folder Include="Repositories\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore">
+      <HintPath>..\..\..\..\..\..\Program Files\dotnet\sdk\NuGetFallbackFolder\microsoft.aspnetcore.identity.entityframeworkcore\2.2.0\lib\netstandard2.0\Microsoft.AspNetCore.Identity.EntityFrameworkCore.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Resources\Resource.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resource.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Resources\Resource.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resource.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
 
 </Project>

@@ -15,7 +15,7 @@ namespace AllInOne.Controllers.V1
     [ApiVersion(ApiRoutes.VersionNumber)]
     [Route("api/v{version:apiVersion}/[controller]")]
     [ApiController]
-    public class BookmarkController : ControllerBase
+    public class BookmarkController : ControllerBase//AppController
     {
         /// <summary>
         /// 
@@ -39,6 +39,19 @@ namespace AllInOne.Controllers.V1
         {
             var bookmarkList = extityContext.Bookmarks.ToList();
             return bookmarkList;
+        }
+
+
+        /// <summary>
+        /// POST api/values
+        /// </summary>
+        /// <param name="value"></param>
+        [HttpPost]
+        public void Post([FromBody] Bookmark value)
+        {
+            var item = value;
+            extityContext.Bookmarks.Add(item);
+            extityContext.SaveChanges();
         }
     }
 }
