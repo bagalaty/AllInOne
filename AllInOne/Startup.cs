@@ -63,14 +63,14 @@ namespace AllInOne
 
             _logger.LogInformation("ConfigureServices called");
 
-            services.AddDbContext<EntityContext>(options =>
-            {
-                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"),
-                    assembly => assembly.MigrationsAssembly(typeof(EntityContext).Assembly.FullName));
-            });
+            //services.AddDbContext<EntityContext>(options =>
+            //{
+            //    options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"),
+            //        assembly => assembly.MigrationsAssembly(typeof(EntityContext).Assembly.FullName));
+            //});
 
-            services.AddIdentity<IdentityUser, IdentityRole>()
-               .AddEntityFrameworkStores<EntityContext>();
+            //services.AddIdentity<IdentityUser, IdentityRole>()
+            //   .AddEntityFrameworkStores<EntityContext>();
 
             //services.AddDbContext<allinoneContext>(options =>
             // options.UseMySQL(Configuration.GetConnectionString("mysqlConnection")));
