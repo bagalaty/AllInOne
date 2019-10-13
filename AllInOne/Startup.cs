@@ -78,6 +78,7 @@ namespace AllInOne
             //services.AddIdentity<IdentityUser, IdentityRole>()
             //    .AddEntityFrameworkStores<allinoneContext>();
 
+            /*
             services.Configure<IdentityOptions>(options =>
             {
                 // Password settings
@@ -100,7 +101,7 @@ namespace AllInOne
 
             // If you don't want the cookie to be automatically authenticated and assigned to HttpContext.User, 
             // remove the CookieAuthenticationDefaults.AuthenticationScheme parameter passed to AddAuthentication.
-            /*
+            
                 services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                        .AddCookie(options => {
                            options.LoginPath = "/Account/Login";
@@ -145,12 +146,12 @@ namespace AllInOne
                 UnicodeRanges.All,
           }));
 
-            services.AddSession(options =>
-            {
-                // Set a short timeout for easy testing.
-                options.IdleTimeout = TimeSpan.FromSeconds(60 * 20);
-                options.Cookie.HttpOnly = true;
-            });
+            //services.AddSession(options =>
+            //{
+            //    // Set a short timeout for easy testing.
+            //    options.IdleTimeout = TimeSpan.FromSeconds(60 * 20);
+            //    options.Cookie.HttpOnly = true;
+            //});
 
             services.AddDataProtection();
 
@@ -177,11 +178,11 @@ namespace AllInOne
             }); ;
 
 
-            services.AddDistributedRedisCache(option =>
-            {
-                option.Configuration = "127.0.0.1";
-                option.InstanceName = "master";
-            });
+            //services.AddDistributedRedisCache(option =>
+            //{
+            //    option.Configuration = "127.0.0.1";
+            //    option.InstanceName = "master";
+            //});
 
             services.AddApiVersioning(options => options.ReportApiVersions = true);
             services.AddSwaggerGen(
