@@ -100,37 +100,41 @@ namespace AllInOne
 
             // If you don't want the cookie to be automatically authenticated and assigned to HttpContext.User, 
             // remove the CookieAuthenticationDefaults.AuthenticationScheme parameter passed to AddAuthentication.
-            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-                    .AddCookie(options => {
-                        options.LoginPath = "/Account/Login";
-                        options.LogoutPath = "/Account/Logout";
-                        options.ExpireTimeSpan = TimeSpan.FromDays(150);
-                    });
+            /*
+                services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                       .AddCookie(options => {
+                           options.LoginPath = "/Account/Login";
+                           options.LogoutPath = "/Account/Logout";
+                           options.ExpireTimeSpan = TimeSpan.FromDays(150);
+                       });
+                */
 
 
             services.AddLocalization(options => options.ResourcesPath = "Resources");
 
 
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                     .AddJwtBearer(options =>
-                     {
-                         options.TokenValidationParameters = new TokenValidationParameters
-                         {
-                             ValidateIssuer = true,
-                             ValidateAudience = true,
-                             ValidateLifetime = true,
-                             ValidateIssuerSigningKey = true,
-                             ValidIssuer = Configuration["JwtSettings:Issuer"],
-                             ValidAudience = Configuration["JwtSettings:Issuer"],
-                             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JwtSettings:Key"]))
-                         };
-                     });
+            /*
+              services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                      .AddJwtBearer(options =>
+                      {
+                          options.TokenValidationParameters = new TokenValidationParameters
+                          {
+                              ValidateIssuer = true,
+                              ValidateAudience = true,
+                              ValidateLifetime = true,
+                              ValidateIssuerSigningKey = true,
+                              ValidIssuer = Configuration["JwtSettings:Issuer"],
+                              ValidAudience = Configuration["JwtSettings:Issuer"],
+                              IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JwtSettings:Key"]))
+                          };
+                      });
+              */
 
 
 
-            services.AddAuthorization(options => options.AddPolicy("BackEndAuthRequirement", 
-                policyBuilder => policyBuilder.Requirements.Add(new BackEndAuthRequirement())));
-            services.AddSingleton<IAuthorizationHandler, BackEndAuthorizationHandler>();
+            //services.AddAuthorization(options => options.AddPolicy("BackEndAuthRequirement", 
+            //    policyBuilder => policyBuilder.Requirements.Add(new BackEndAuthRequirement())));
+            //services.AddSingleton<IAuthorizationHandler, BackEndAuthorizationHandler>();
             services.AddSingleton<IUnitOfWork, UnitOfWork>();
 
             services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
@@ -154,10 +158,10 @@ namespace AllInOne
             services.AddMvc(
                 options =>
                 {
-                    var policy = new AuthorizationPolicyBuilder()
-                        .RequireAuthenticatedUser()
-                        .Build();
-                    options.Filters.Add(new AuthorizeFilter(policy));
+                    //var policy = new AuthorizationPolicyBuilder()
+                    //    .RequireAuthenticatedUser()
+                    //    .Build();
+                    //options.Filters.Add(new AuthorizeFilter(policy));
                     // ...
                 }).SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
@@ -256,7 +260,7 @@ namespace AllInOne
 
             app.UseRequestLocalization(options);
             app.UseStaticFiles();
-            app.UseAuthentication();
+           // app.UseAuthentication();
 
           
 
