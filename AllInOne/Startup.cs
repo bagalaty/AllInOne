@@ -78,7 +78,7 @@ namespace AllInOne
             //services.AddIdentity<IdentityUser, IdentityRole>()
             //    .AddEntityFrameworkStores<allinoneContext>();
 
-            /*
+
             services.Configure<IdentityOptions>(options =>
             {
                 // Password settings
@@ -101,35 +101,36 @@ namespace AllInOne
 
             // If you don't want the cookie to be automatically authenticated and assigned to HttpContext.User, 
             // remove the CookieAuthenticationDefaults.AuthenticationScheme parameter passed to AddAuthentication.
-            
-                services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-                       .AddCookie(options => {
-                           options.LoginPath = "/Account/Login";
-                           options.LogoutPath = "/Account/Logout";
-                           options.ExpireTimeSpan = TimeSpan.FromDays(150);
-                       });
-                */
+
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                   .AddCookie(options =>
+                   {
+                       options.LoginPath = "/Account/Login";
+                       options.LogoutPath = "/Account/Logout";
+                       options.ExpireTimeSpan = TimeSpan.FromDays(150);
+                   });
+
 
 
             services.AddLocalization(options => options.ResourcesPath = "Resources");
 
 
-            /*
-              services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                      .AddJwtBearer(options =>
-                      {
-                          options.TokenValidationParameters = new TokenValidationParameters
-                          {
-                              ValidateIssuer = true,
-                              ValidateAudience = true,
-                              ValidateLifetime = true,
-                              ValidateIssuerSigningKey = true,
-                              ValidIssuer = Configuration["JwtSettings:Issuer"],
-                              ValidAudience = Configuration["JwtSettings:Issuer"],
-                              IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JwtSettings:Key"]))
-                          };
-                      });
-              */
+
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                    .AddJwtBearer(options =>
+                    {
+                        options.TokenValidationParameters = new TokenValidationParameters
+                        {
+                            ValidateIssuer = true,
+                            ValidateAudience = true,
+                            ValidateLifetime = true,
+                            ValidateIssuerSigningKey = true,
+                            ValidIssuer = Configuration["JwtSettings:Issuer"],
+                            ValidAudience = Configuration["JwtSettings:Issuer"],
+                            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JwtSettings:Key"]))
+                        };
+                    });
+
 
 
 
@@ -141,69 +142,65 @@ namespace AllInOne
             services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
             services.AddSingleton<HtmlEncoder>(
-          HtmlEncoder.Create(allowedRanges: new[]
-          {
-                UnicodeRanges.All,
-          }));
+                  HtmlEncoder.Create(allowedRanges: new[]
+                  {
+                        UnicodeRanges.All,
+                  }));
 
-            //services.AddSession(options =>
-            //{
-            //    // Set a short timeout for easy testing.
-            //    options.IdleTimeout = TimeSpan.FromSeconds(60 * 20);
-            //    options.Cookie.HttpOnly = true;
-            //});
+            services.AddSession(options =>
+            {
+                // Set a short timeout for easy testing.
+                options.IdleTimeout = TimeSpan.FromSeconds(60 * 20);
+                options.Cookie.HttpOnly = true;
+            });
 
             services.AddDataProtection();
-
-
             services.AddMvc(
                 options =>
                 {
-                    //var policy = new AuthorizationPolicyBuilder()
-                    //    .RequireAuthenticatedUser()
-                    //    .Build();
-                    //options.Filters.Add(new AuthorizeFilter(policy));
-                    // ...
+                    var policy = new AuthorizationPolicyBuilder()
+                       .RequireAuthenticatedUser()
+                       .Build();
+                    options.Filters.Add(new AuthorizeFilter(policy));
                 }).SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
-            services.AddMvcCore()
-      .AddJsonFormatters()
-      .AddVersionedApiExplorer(
-            options =>
+            services.AddMvcCore().AddJsonFormatters()
+                                 .AddVersionedApiExplorer(
+                                    options =>
+                                    {
+                                        //The format of the version added to the route URL  
+                                        options.GroupNameFormat = "'v'VVV";
+                                        //Tells swagger to replace the version in the controller route  
+                                        options.SubstituteApiVersionInUrl = true;
+                                    }); ;
+
+
+            services.AddDistributedRedisCache(option =>
             {
-                  //The format of the version added to the route URL  
-                  options.GroupNameFormat = "'v'VVV";
-                  //Tells swagger to replace the version in the controller route  
-                  options.SubstituteApiVersionInUrl = true;
-            }); ;
-
-
-            //services.AddDistributedRedisCache(option =>
-            //{
-            //    option.Configuration = "127.0.0.1";
-            //    option.InstanceName = "master";
-            //});
+                option.Configuration = "127.0.0.1";
+                option.InstanceName = "master";
+            });
 
             services.AddApiVersioning(options => options.ReportApiVersions = true);
             services.AddSwaggerGen(
                 options =>
                 {
-            // Resolve the temprary IApiVersionDescriptionProvider service  
-            var provider = services.BuildServiceProvider().GetRequiredService<IApiVersionDescriptionProvider>();
+                    // Resolve the temprary IApiVersionDescriptionProvider service  
+                    var provider = services.BuildServiceProvider().GetRequiredService<IApiVersionDescriptionProvider>();
 
-            // Add a swagger document for each discovered API version  
-            foreach (var description in provider.ApiVersionDescriptions)
+                    // Add a swagger document for each discovered API version  
+                    foreach (var description in provider.ApiVersionDescriptions)
                     {
                         options.SwaggerDoc(description.GroupName, new Info()
                         {
                             Title = $"{this.GetType().Assembly.GetCustomAttribute<AssemblyProductAttribute>().Product} {description.ApiVersion}",
                             Version = description.ApiVersion.ToString(),
                             Description = description.IsDeprecated ?
-                            $"{this.GetType().Assembly.GetCustomAttribute<AssemblyDescriptionAttribute>().Description} - DEPRECATED" : 
+                            $"{this.GetType().Assembly.GetCustomAttribute<AssemblyDescriptionAttribute>().Description} - DEPRECATED" :
                             this.GetType().Assembly.GetCustomAttribute<AssemblyDescriptionAttribute>().Description,
                             TermsOfService = "https://example.com/terms",
-                            Contact = new Contact{Name = "Ahmed BaGaLaTy",Email = string.Empty,Url = "https://twitter.com/BaGaLaTy"},
-                            License = new License{Name = "Use under LICX",Url = "https://example.com/license"}
+                            Contact = new Contact { Name = "Ahmed BaGaLaTy", Email = string.Empty, Url = "https://twitter.com/BaGaLaTy" },
+                            License = new License { Name = "Use under LICX", Url = "https://example.com/license" }
                         });
                     }
 
@@ -213,10 +210,10 @@ namespace AllInOne
                     // Add a custom filter for settint the default values  
                     options.OperationFilter<SwaggerDefaultValues>();
 
-            // Tells swagger to pick up the output XML document file  
-            options.IncludeXmlComments(Path.Combine(
-                        Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), $"{this.GetType().Assembly.GetName().Name}.xml"
-                        ));
+                    // Tells swagger to pick up the output XML document file  
+                    options.IncludeXmlComments(Path.Combine(
+                                Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), $"{this.GetType().Assembly.GetName().Name}.xml"
+                                ));
 
                 });
         }
@@ -232,10 +229,14 @@ namespace AllInOne
 
             if (env.IsDevelopment())
             {
+                _logger.LogInformation("IsDevelopment : true");
+
                 app.UseDeveloperExceptionPage();
             }
             else
             {
+                _logger.LogInformation("IsDevelopment : false : production");
+
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
@@ -261,11 +262,11 @@ namespace AllInOne
 
             app.UseRequestLocalization(options);
             app.UseStaticFiles();
-           // app.UseAuthentication();
+            app.UseAuthentication();
 
-          
 
-          //  IServiceCollection services = new ServiceCollection();
+
+            //  IServiceCollection services = new ServiceCollection();
 
             app.UseSwagger();
             app.UseSwaggerUI(c =>

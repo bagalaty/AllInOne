@@ -6,8 +6,17 @@
     <Description>AllInOne Description here !!</Description>
   </PropertyGroup>
 
+
+  <PropertyGroup>
+   
+    <!-- 
+    Make sure documentation XML is also included when publishing (not only when testing)
+    see https://github.com/Azure/service-fabric-issues/issues/190
+    -->
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+  </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>C:\Users\Lenovo\Desktop\projects\AllInOne\AllInOne\AllInOne.xml</DocumentationFile>
+    <DocumentationFile>bin\$(Configuration)\AllInOne.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
@@ -35,6 +44,12 @@
   <ItemGroup>
     <ProjectReference Include="..\Core\Core.csproj" />
     <ProjectReference Include="..\Services\Services.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="app.yaml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>
