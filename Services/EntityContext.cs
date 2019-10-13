@@ -45,7 +45,7 @@ public class EntityContext : IdentityDbContext
         {
             entity.AddProperty("Created", typeof(DateTime));
             entity.AddProperty("Modified", typeof(DateTime));
-            entity.AddProperty("Message", typeof(string));
+           // entity.AddProperty("Message", typeof(string));
 
 
             entity.AddProperty("CreatedDate", typeof(DateTime));

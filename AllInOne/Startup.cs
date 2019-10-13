@@ -63,14 +63,14 @@ namespace AllInOne
 
             _logger.LogInformation("ConfigureServices called");
 
-            //services.AddDbContext<EntityContext>(options =>
-            //{
-            //    options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"),
-            //        assembly => assembly.MigrationsAssembly(typeof(EntityContext).Assembly.FullName));
-            //});
+            services.AddDbContext<EntityContext>(options =>
+            {
+                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"),
+                    assembly => assembly.MigrationsAssembly(typeof(EntityContext).Assembly.FullName));
+            });
 
-            //services.AddIdentity<IdentityUser, IdentityRole>()
-            //   .AddEntityFrameworkStores<EntityContext>();
+            services.AddIdentity<IdentityUser, IdentityRole>()
+               .AddEntityFrameworkStores<EntityContext>();
 
             //services.AddDbContext<allinoneContext>(options =>
             // options.UseMySQL(Configuration.GetConnectionString("mysqlConnection")));
@@ -97,18 +97,18 @@ namespace AllInOne
             });
 
             // If you want to tweak Identity cookies, they're no longer part of IdentityOptions.
-            services.ConfigureApplicationCookie(options => options.LoginPath = "/Account/Login");
+           // services.ConfigureApplicationCookie(options => options.LoginPath = "/Account/Login");
 
             // If you don't want the cookie to be automatically authenticated and assigned to HttpContext.User, 
             // remove the CookieAuthenticationDefaults.AuthenticationScheme parameter passed to AddAuthentication.
 
-            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-                   .AddCookie(options =>
-                   {
-                       options.LoginPath = "/Account/Login";
-                       options.LogoutPath = "/Account/Logout";
-                       options.ExpireTimeSpan = TimeSpan.FromDays(150);
-                   });
+            //services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+            //       .AddCookie(options =>
+            //       {
+            //           options.LoginPath = "/Account/Login";
+            //           options.LogoutPath = "/Account/Logout";
+            //           options.ExpireTimeSpan = TimeSpan.FromDays(150);
+            //       });
 
 
 
@@ -158,10 +158,10 @@ namespace AllInOne
             services.AddMvc(
                 options =>
                 {
-                    var policy = new AuthorizationPolicyBuilder()
-                       .RequireAuthenticatedUser()
-                       .Build();
-                    options.Filters.Add(new AuthorizeFilter(policy));
+                    //var policy = new AuthorizationPolicyBuilder()
+                    //   .RequireAuthenticatedUser()
+                    //   .Build();
+                    //options.Filters.Add(new AuthorizeFilter(policy));
                 }).SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             services.AddMvcCore().AddJsonFormatters()
