@@ -16,6 +16,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
+using Services.Helpers;
+using Services.Models.Interfaces;
 using Services.Repositories;
 using Swashbuckle.AspNetCore.Swagger;
 using System;
@@ -38,8 +40,6 @@ namespace AllInOne
         /// 
         /// </summary>
         public IConfiguration Configuration { get; }
-
-
         private readonly ILogger<Startup> _logger;
 
         /// <summary>
@@ -95,57 +95,20 @@ namespace AllInOne
                 // User settings
                 options.User.RequireUniqueEmail = true;
             });
-
-            // If you want to tweak Identity cookies, they're no longer part of IdentityOptions.
-           // services.ConfigureApplicationCookie(options => options.LoginPath = "/Account/Login");
-
-            // If you don't want the cookie to be automatically authenticated and assigned to HttpContext.User, 
-            // remove the CookieAuthenticationDefaults.AuthenticationScheme parameter passed to AddAuthentication.
-
-            //services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-            //       .AddCookie(options =>
-            //       {
-            //           options.LoginPath = "/Account/Login";
-            //           options.LogoutPath = "/Account/Logout";
-            //           options.ExpireTimeSpan = TimeSpan.FromDays(150);
-            //       });
-
-
-
+            
             services.AddLocalization(options => options.ResourcesPath = "Resources");
-
-
-
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                    .AddJwtBearer(options =>
-                    {
-                        options.TokenValidationParameters = new TokenValidationParameters
-                        {
-                            ValidateIssuer = true,
-                            ValidateAudience = true,
-                            ValidateLifetime = true,
-                            ValidateIssuerSigningKey = true,
-                            ValidIssuer = Configuration["JwtSettings:Issuer"],
-                            ValidAudience = Configuration["JwtSettings:Issuer"],
-                            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JwtSettings:Key"]))
-                        };
-                    });
-
-
-
 
             //services.AddAuthorization(options => options.AddPolicy("BackEndAuthRequirement", 
             //    policyBuilder => policyBuilder.Requirements.Add(new BackEndAuthRequirement())));
+
+            #region configure_DI_for_application _services
             //services.AddSingleton<IAuthorizationHandler, BackEndAuthorizationHandler>();
             services.AddSingleton<IUnitOfWork, UnitOfWork>();
-
             services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddSingleton<HtmlEncoder>(HtmlEncoder.Create(allowedRanges: new[] { UnicodeRanges.All }));
+            services.AddScoped<IUserService, UserService>();
+            #endregion
 
-            services.AddSingleton<HtmlEncoder>(
-                  HtmlEncoder.Create(allowedRanges: new[]
-                  {
-                        UnicodeRanges.All,
-                  }));
 
             services.AddSession(options =>
             {
@@ -153,16 +116,48 @@ namespace AllInOne
                 options.IdleTimeout = TimeSpan.FromSeconds(60 * 20);
                 options.Cookie.HttpOnly = true;
             });
-
             services.AddDataProtection();
-            services.AddMvc(
-                options =>
+            services.AddMvc(options =>
                 {
                     //var policy = new AuthorizationPolicyBuilder()
                     //   .RequireAuthenticatedUser()
                     //   .Build();
                     //options.Filters.Add(new AuthorizeFilter(policy));
                 }).SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+
+
+            // configure strongly typed settings objects
+            var appSettingsSection = Configuration.GetSection("AppSettings");
+            services.Configure<AppSettings>(appSettingsSection);
+
+            // configure jwt authentication
+            var appSettings = appSettingsSection.Get<AppSettings>();
+            var key = Encoding.ASCII.GetBytes(appSettings.Secret);
+            services.AddAuthentication(x =>
+            {
+                x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(x =>
+            {
+                x.RequireHttpsMetadata = false;
+                x.SaveToken = true;
+                x.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                   // IssuerSigningKey = new SymmetricSecurityKey(key),
+                    ValidateIssuer = false,
+                    ValidateAudience = false,
+                    ValidIssuer = Configuration["JwtSettings:Issuer"],
+                    ValidAudience = Configuration["JwtSettings:Issuer"],
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["JwtSettings:Key"]))
+                };
+            });
+
+           
+
+
 
             services.AddMvcCore().AddJsonFormatters()
                                  .AddVersionedApiExplorer(
@@ -172,7 +167,9 @@ namespace AllInOne
                                         options.GroupNameFormat = "'v'VVV";
                                         //Tells swagger to replace the version in the controller route  
                                         options.SubstituteApiVersionInUrl = true;
-                                    }); ;
+                                    });
+
+
 
 
             services.AddDistributedRedisCache(option =>
@@ -245,13 +242,13 @@ namespace AllInOne
 
             var supportedCultures = new List<CultureInfo>
             {
-                new CultureInfo("ar-AR"),
+                new CultureInfo("ar"),
                 new CultureInfo("en-US")
             };
 
             var options = new RequestLocalizationOptions
             {
-                DefaultRequestCulture = new RequestCulture("en-US"),
+                DefaultRequestCulture = new RequestCulture("en", "en"),
                 SupportedCultures = supportedCultures,
                 SupportedUICultures = supportedCultures,
                 RequestCultureProviders = new IRequestCultureProvider[] { new CookieRequestCultureProvider
@@ -262,8 +259,14 @@ namespace AllInOne
 
             app.UseRequestLocalization(options);
             app.UseStaticFiles();
-            app.UseAuthentication();
 
+            // global cors policy
+            app.UseCors(x => x
+                .AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader());
+
+            app.UseAuthentication();
 
 
             //  IServiceCollection services = new ServiceCollection();
@@ -278,6 +281,7 @@ namespace AllInOne
                 }
 
             });
+
 
             app.UseMvc();
         }

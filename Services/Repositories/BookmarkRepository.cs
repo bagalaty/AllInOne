@@ -18,8 +18,8 @@ namespace Services.Repositories
             var response = request.GetResponse();
             return new BaseModel
             {
-                Message = response.message,
-                MessageType = response.HasError ? Models.Enums.MessageType.error : Models.Enums.MessageType.success
+                //Message = response.message,
+                //MessageType = response.HasError ? Models.Enums.MessageType.error : Models.Enums.MessageType.success
             };
         }
 

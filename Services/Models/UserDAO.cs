@@ -55,6 +55,8 @@ namespace Services.Models
 
         public int spacesCount { get; set; }
 
+
+        
         //public string roleName
         //{
         //    get

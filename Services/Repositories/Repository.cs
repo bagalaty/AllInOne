@@ -21,7 +21,9 @@ namespace Services.Repositories
             var request = AllInOneRequestManager.CreateAllInOneRequest(apiName, true, false, parameters);
             request.Body = model;
             var response = request.GetResponse();
-            return new BaseModel { Message = response.message, MessageType = response.HasError ? MessageType.error : MessageType.success };
+            return new BaseModel {
+                //Message = response.message, MessageType = response.HasError ? MessageType.error : MessageType.success
+            };
         }
 
         protected BaseModel Update(string apiName, T model, List<string> parameters = null)
@@ -29,7 +31,10 @@ namespace Services.Repositories
             var request = AllInOneRequestManager.CreateAllInOneRequest(apiName, true, false, parameters);
             request.Body = model;
             var response = request.GetResponse();
-            return new BaseModel { Message = response.message, MessageType = response.HasError ? MessageType.error : MessageType.success };
+            return new BaseModel
+            {
+                //Message = response.message, MessageType = response.HasError ? MessageType.error : MessageType.success
+            };
         }
 
         protected bool Delete(string apiName, string id)

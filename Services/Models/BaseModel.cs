@@ -24,10 +24,10 @@ namespace Services.Models
         //public DateTime Created { get; set; }
         //[IgnoreDataMember]
         //public DateTime Modified { get; set; }
-        [IgnoreDataMember]
-        public string Message { get; set; }
-        [IgnoreDataMember]
-        public MessageType MessageType { get; set; }
+        //[IgnoreDataMember]
+        //public string Message { get; set; }
+        //[IgnoreDataMember]
+        //public MessageType MessageType { get; set; }
 
 
         //public BaseModel(AllInOneResponse response)
