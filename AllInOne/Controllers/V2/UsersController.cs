@@ -1,8 +1,11 @@
 ﻿using AllInOne.Contract.V2;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Services.Helpers;
 using Services.Models;
 using Services.Models.Interfaces;
+using Services.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,6 +19,10 @@ namespace AllInOne.Controllers.V2
     [Route("api/v{version:apiVersion}/[controller]")]
     public class UsersController : ControllerBase
     {
+        private UserManager<AppUser> _userManager;
+        private SignInManager<AppUser> _signInManager;
+        private readonly AppSettings _appSettings;
+
         public EntityContext extityContext { get; set; }
 
         private IUserService _userService;
@@ -26,8 +33,8 @@ namespace AllInOne.Controllers.V2
         }
 
         [AllowAnonymous]
-        [HttpPost("authenticate")]
-        public IActionResult Authenticate([FromBody]User userParam)
+        [HttpPost("Login")]
+        public IActionResult Login([FromBody]User userParam)
         {
             var user = _userService.Authenticate(userParam.Username, userParam.Password);
 
@@ -42,6 +49,32 @@ namespace AllInOne.Controllers.V2
         {
             var users = _userService.GetAll();
             return Ok(users);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
+        [HttpPost]
+        [Route("Register")]
+        public async Task<Object> PostUser(AppUserModel model)
+        {
+            var appUser = new AppUser()
+            {
+                UserName = model.UserName,
+                Email = model.Email,
+                FirstName = model.FullName
+            };
+            try
+            {
+                var result = await _userManager.CreateAsync(appUser, model.Password);
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
         }
     }
 }

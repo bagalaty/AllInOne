@@ -7,7 +7,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-public class EntityContext : IdentityDbContext
+public class EntityContext : IdentityDbContext<AppUser>
 {
     public EntityContext(DbContextOptions<EntityContext> options)
        : base(options)

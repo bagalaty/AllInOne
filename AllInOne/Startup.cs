@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
@@ -16,7 +17,9 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json.Serialization;
 using Services.Helpers;
+using Services.Models;
 using Services.Models.Interfaces;
 using Services.Repositories;
 using Swashbuckle.AspNetCore.Swagger;
@@ -69,7 +72,7 @@ namespace AllInOne
                     assembly => assembly.MigrationsAssembly(typeof(EntityContext).Assembly.FullName));
             });
 
-            services.AddIdentity<IdentityUser, IdentityRole>()
+            services.AddIdentity<AppUser, IdentityRole>()
                .AddEntityFrameworkStores<EntityContext>();
 
             //services.AddDbContext<allinoneContext>(options =>
@@ -123,7 +126,15 @@ namespace AllInOne
                     //   .RequireAuthenticatedUser()
                     //   .Build();
                     //options.Filters.Add(new AuthorizeFilter(policy));
-                }).SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+                }).SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
+                .AddJsonOptions(options =>
+                {
+                    var resolver = options.SerializerSettings.ContractResolver;
+                    if (resolver != null)
+                    {
+                        (resolver as DefaultContractResolver).NamingStrategy = null;
+                    }
+                });
 
 
             // configure strongly typed settings objects
@@ -137,7 +148,23 @@ namespace AllInOne
             {
                 x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                x.DefaultSignInScheme = JwtBearerDefaults.AuthenticationScheme;
+
             })
+
+            .AddFacebook(facebookOptions => {
+                facebookOptions.AppId = "394550871390292";
+                facebookOptions.AppSecret = "90c8d01df8e8aeeebf16805c259f31e0";
+            })
+
+            //.AddGoogle(googleOptions => {
+            //    googleOptions.ClientId = "";
+            //    googleOptions.ClientSecret = "";
+            //})
+            //.AddTwitter(twitterOptions=> {
+            //    twitterOptions.ConsumerKey = "";
+            //    twitterOptions.ConsumerSecret = "";
+            //})
             .AddJwtBearer(x =>
             {
                 x.RequireHttpsMetadata = false;
@@ -224,6 +251,12 @@ namespace AllInOne
         {
             _logger.LogInformation("Configure called");
 
+            app.Use(async (ctx, next) => {
+                await next();
+                if (ctx.Response.StatusCode == 204)
+                    ctx.Response.ContentLength = 0;
+            });
+
             if (env.IsDevelopment())
             {
                 _logger.LogInformation("IsDevelopment : true");
@@ -258,13 +291,26 @@ namespace AllInOne
             };
 
             app.UseRequestLocalization(options);
+
+            app.UseCors("CorsPolicy");
+            app.UseForwardedHeaders(new ForwardedHeadersOptions
+            {
+                ForwardedHeaders = ForwardedHeaders.All
+            });
             app.UseStaticFiles();
 
             // global cors policy
-            app.UseCors(x => x
-                .AllowAnyOrigin()
-                .AllowAnyMethod()
-                .AllowAnyHeader());
+            //app.UseCors(x => x
+            //    .AllowAnyOrigin()
+            //    .AllowAnyMethod()
+            //    .AllowAnyHeader());
+
+            app.UseCors(opt => opt.WithOrigins(
+               Configuration["AppSettings:ClientUrl"].ToString(),
+               Configuration["AppSettings:DesignTShootClientUrl"].ToString(),
+                Configuration["AppSettings:APITShootClientUrl"].ToString())
+           .AllowAnyMethod()
+           .AllowAnyHeader());
 
             app.UseAuthentication();
 
@@ -272,15 +318,16 @@ namespace AllInOne
             //  IServiceCollection services = new ServiceCollection();
 
             app.UseSwagger();
-            app.UseSwaggerUI(c =>
-            {
-                //Build a swagger endpoint for each discovered API version  
-                foreach (var description in provider.ApiVersionDescriptions)
+                app.UseSwaggerUI(c =>
                 {
-                    c.SwaggerEndpoint($"/swagger/{description.GroupName}/swagger.json", description.GroupName.ToUpperInvariant());
-                }
+                    //Build a swagger endpoint for each discovered API version  
+                    foreach (var description in provider.ApiVersionDescriptions)
+                    {
+                        c.SwaggerEndpoint($"/swagger/{description.GroupName}/swagger.json", description.GroupName.ToUpperInvariant());
+                        c.DocExpansion(Swashbuckle.AspNetCore.SwaggerUI.DocExpansion.List);
+                    }
 
-            });
+                });
 
 
             app.UseMvc();
